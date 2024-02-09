@@ -35,7 +35,7 @@ public class DroneController : MonoBehaviour
     private float UpdateThrottle()
     {
         _currentThrottle += Input.GetAxis("Vertical");
-        _currentThrottle = Mathf.Clamp( _currentThrottle, -MaxThrottle, MaxThrottle);
+        _currentThrottle = Mathf.Clamp( _currentThrottle, 0, MaxThrottle);
 
         return _currentThrottle;
     }
