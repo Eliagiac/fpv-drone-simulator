@@ -16,6 +16,8 @@ public class DroneController : MonoBehaviour
 
     private Vector3 _upDirection;
 
+    private float _currentThrottle = 0f;
+
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
@@ -28,5 +30,14 @@ public class DroneController : MonoBehaviour
         _rb.AddForceAtPosition(_upDirection * MotorSpeed * Time.fixedDeltaTime, _frontRightMotor.position);
         _rb.AddForceAtPosition(_upDirection * MotorSpeed * Time.fixedDeltaTime, _backLeftMotor.position);
         _rb.AddForceAtPosition(_upDirection * MotorSpeed * Time.fixedDeltaTime, _backRightMotor.position);
+
+        Debug.Log(UpdateThrottle());
+    }
+
+    private float UpdateThrottle()
+    {
+        _currentThrottle += Input.GetAxis("Vertical");
+
+        return _currentThrottle;
     }
 }
