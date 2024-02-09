@@ -15,14 +15,11 @@ public class DroneController : MonoBehaviour
 
     private Rigidbody _rb;
 
-    private Vector3 _upDirection;
-
     private float _currentThrottle = 0f;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _upDirection = transform.forward;
     }
 
     private void FixedUpdate()
@@ -47,6 +44,6 @@ public class DroneController : MonoBehaviour
         _rb.AddForceAtPosition(BaseThrust() * backLeft, _backLeftMotor.position);
         _rb.AddForceAtPosition(BaseThrust() * backRight, _backRightMotor.position);
 
-        Vector3 BaseThrust() => _upDirection * MotorSpeed * Time.fixedDeltaTime;
+        Vector3 BaseThrust() => transform.forward * MotorSpeed * Time.fixedDeltaTime;
     }
 }

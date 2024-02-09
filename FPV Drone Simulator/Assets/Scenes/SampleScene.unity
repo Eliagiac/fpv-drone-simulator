@@ -570,5 +570,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Drone
       objectReference: {fileID: 0}
+    - target: {fileID: 7586687320102597130, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: MaxThrottle
+      value: 1.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d914ffd1b739b1a4181db24b7df73533, type: 3}
