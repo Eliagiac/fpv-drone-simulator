@@ -27,12 +27,9 @@ public class DroneController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _rb.AddForceAtPosition(_upDirection * MotorSpeed * Time.fixedDeltaTime, _frontLeftMotor.position);
-        _rb.AddForceAtPosition(_upDirection * MotorSpeed * Time.fixedDeltaTime, _frontRightMotor.position);
-        _rb.AddForceAtPosition(_upDirection * MotorSpeed * Time.fixedDeltaTime, _backLeftMotor.position);
-        _rb.AddForceAtPosition(_upDirection * MotorSpeed * Time.fixedDeltaTime, _backRightMotor.position);
-
-        Debug.Log(UpdateThrottle());
+        UpdateThrottle();
+        Debug.Log(_currentThrottle);
+        ApplyThrust(_currentThrottle, _currentThrottle, _currentThrottle, _currentThrottle);
     }
 
     private float UpdateThrottle()
@@ -41,5 +38,15 @@ public class DroneController : MonoBehaviour
         _currentThrottle = Mathf.Clamp( _currentThrottle, -MaxThrottle, MaxThrottle);
 
         return _currentThrottle;
+    }
+
+    public void ApplyThrust(float frontLeft, float frontRight, float backLeft, float backRight)
+    {
+        _rb.AddForceAtPosition(BaseThrust() * frontLeft, _frontLeftMotor.position);
+        _rb.AddForceAtPosition(BaseThrust() * frontRight, _frontRightMotor.position);
+        _rb.AddForceAtPosition(BaseThrust() * backLeft, _backLeftMotor.position);
+        _rb.AddForceAtPosition(BaseThrust() * backRight, _backRightMotor.position);
+
+        Vector3 BaseThrust() => _upDirection * MotorSpeed * Time.fixedDeltaTime;
     }
 }
