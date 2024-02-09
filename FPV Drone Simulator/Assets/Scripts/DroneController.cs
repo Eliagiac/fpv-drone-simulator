@@ -6,6 +6,7 @@ using UnityEngine;
 public class DroneController : MonoBehaviour
 {
     public float MotorSpeed = 100f;
+    public float MaxThrottle = 2.5f;
 
     [SerializeField] private Transform _frontLeftMotor;
     [SerializeField] private Transform _frontRightMotor;
@@ -37,6 +38,7 @@ public class DroneController : MonoBehaviour
     private float UpdateThrottle()
     {
         _currentThrottle += Input.GetAxis("Vertical");
+        _currentThrottle = Mathf.Clamp( _currentThrottle, -MaxThrottle, MaxThrottle);
 
         return _currentThrottle;
     }
