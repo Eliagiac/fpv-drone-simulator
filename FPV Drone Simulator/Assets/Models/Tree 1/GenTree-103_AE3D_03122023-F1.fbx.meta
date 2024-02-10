@@ -3,7 +3,22 @@ guid: c8aab04122db56c41955fc3b5696c9fb
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material-Leaves
+    second: {fileID: 2100000, guid: 951d85a00f682794791af757c61d2355, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.Trunk_and_Primary_Limbs
+    second: {fileID: 2100000, guid: fc0ddb1ef182be24dbb1d90fb58ae700, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.Twigs
+    second: {fileID: 2100000, guid: f3064584ea5563e41a2710a02a448e87, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
