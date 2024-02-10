@@ -2,114 +2,119 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DroneController : MonoBehaviour
 {
-    public float MotorSpeed = 100f;
+    public float MotorPower = 100f;
+
     public float MaxThrottle = 2.5f;
 
-    public Motor FrontLeftMotor;
-    public Motor FrontRightMotor;
-    public Motor BackLeftMotor;
-    public Motor BackRightMotor;
-
-    [SerializeField] private Transform _frontLeftMotorTransform;
-    [SerializeField] private Transform _frontRightMotorTransform;
-    [SerializeField] private Transform _backLeftMotorTransform;
-    [SerializeField] private Transform _backRightMotorTransform;
+    public float MaxPitch = 1.0f;
+    public float MaxRoll = 1.0f;
+    public float MaxYaw = 1.0f;
 
     private Rigidbody _rb;
+
+    public Vector2 Cyclic { get; private set; }
+    public float Pedals { get; private set; }
+    public float Throttle { get; private set; }
 
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
-
-        FrontLeftMotor = new(_frontLeftMotorTransform.position);
-        FrontRightMotor = new(_frontRightMotorTransform.position);
-        BackLeftMotor = new(_backLeftMotorTransform.position);
-        BackRightMotor = new(_backRightMotorTransform.position);
-    }
-
-    private void Update()
-    {
-        Throttle(Mathf.Clamp(Input.GetAxis("Vertical"), 0, MaxThrottle));
     }
 
     private void FixedUpdate()
     {
         ApplyThrust();
+        ApplyRotation();
     }
 
 
-    private void Throttle(float amount)
-    {
-        FrontLeftMotor.SetPower(amount);
-        FrontRightMotor.SetPower(amount);
-        BackLeftMotor.SetPower(amount);
-        BackRightMotor.SetPower(amount);
-    }
+    private void OnCyclic(InputValue value) => Cyclic = value.Get<Vector2>();
 
-    private void Pitch(float amount)
-    {
-        // Pitch upwards.
-        if (amount > 0)
-        {
-            FrontLeftMotor.AddPower(amount);
-            FrontRightMotor.AddPower(amount);
-        }
+    private void OnPedals(InputValue value) => Pedals = value.Get<float>();
 
-        // Pitch downwards.
-        else
-        {
-            BackLeftMotor.AddPower(amount);
-            BackRightMotor.AddPower(amount);
-        }
-    }
+    // The throttle is bewteen 0 and 1, not -1 and 1.
+    private void OnThrottle(InputValue value) => Throttle = (value.Get<float>() + 1) / 2f;
 
-    private void Roll(float amount)
-    {
-        // Roll right.
-        if (amount > 0) 
-        {
-            FrontLeftMotor.AddPower(amount);
-            BackLeftMotor.AddPower(amount);
-        }
+    //private void Throttle(float amount)
+    //{
+    //    FrontLeftMotor.SetPower(amount);
+    //    FrontRightMotor.SetPower(amount);
+    //    BackLeftMotor.SetPower(amount);
+    //    BackRightMotor.SetPower(amount);
+    //}
 
-        // Roll left.
-        else
-        {
-            FrontRightMotor.AddPower(amount);
-            BackRightMotor.AddPower(amount);
-        }
-    }
+    //private void Pitch(float amount)
+    //{
+    //    // Pitch upwards.
+    //    if (amount > 0)
+    //    {
+    //        FrontLeftMotor.AddPower(amount);
+    //        FrontRightMotor.AddPower(amount);
+    //    }
 
-    private void Yaw(float amount)
-    {
-        // Yaw right.
-        if (amount > 0)
-        {
-            FrontRightMotor.AddPower(amount);
-            BackLeftMotor.AddPower(amount);
-        }
+    //    // Pitch downwards.
+    //    else
+    //    {
+    //        BackLeftMotor.AddPower(amount);
+    //        BackRightMotor.AddPower(amount);
+    //    }
+    //}
 
-        // Yaw left.
-        else
-        {
-            FrontLeftMotor.AddPower(amount);
-            BackRightMotor.AddPower(amount);
-        }
-    }
+    //private void Roll(float amount)
+    //{
+    //    // Roll right.
+    //    if (amount > 0) 
+    //    {
+    //        FrontLeftMotor.AddPower(amount);
+    //        BackLeftMotor.AddPower(amount);
+    //    }
+
+    //    // Roll left.
+    //    else
+    //    {
+    //        FrontRightMotor.AddPower(amount);
+    //        BackRightMotor.AddPower(amount);
+    //    }
+    //}
+
+    //private void Yaw(float amount)
+    //{
+    //    // Yaw right.
+    //    if (amount > 0)
+    //    {
+    //        FrontRightMotor.AddPower(amount);
+    //        BackLeftMotor.AddPower(amount);
+    //    }
+    //
+    //    // Yaw left.
+    //    else
+    //    {
+    //        FrontLeftMotor.AddPower(amount);
+    //        BackRightMotor.AddPower(amount);
+    //    }
+    //}
 
     private void ApplyThrust()
     {
-        Debug.Log($"{FrontLeftMotor.GetPower()} {FrontRightMotor.GetPower()} {BackLeftMotor.GetPower()} {BackRightMotor.GetPower()}");
+        float throttle = Throttle * MaxThrottle;
 
-        _rb.AddForceAtPosition(BaseThrust() * FrontLeftMotor.GetPower(), FrontLeftMotor.Position);
-        _rb.AddForceAtPosition(BaseThrust() * FrontRightMotor.GetPower(), FrontRightMotor.Position);
-        _rb.AddForceAtPosition(BaseThrust() * BackLeftMotor.GetPower(), BackLeftMotor.Position);
-        _rb.AddForceAtPosition(BaseThrust() * BackRightMotor.GetPower(), BackRightMotor.Position);
+        _rb.AddForce(BaseThrust() * throttle);
     }
 
-    private Vector3 BaseThrust() => transform.forward * MotorSpeed * Time.fixedDeltaTime;
+    private void ApplyRotation()
+    {
+
+        float pitch = Cyclic.y * MaxPitch;
+        float yaw = Pedals * MaxYaw;
+        float roll = Cyclic.x * MaxRoll;
+
+        _rb.MoveRotation(transform.rotation * Quaternion.Euler(pitch, yaw, roll));
+    }
+
+    private Vector3 BaseThrust() => transform.forward * MotorPower * Time.fixedDeltaTime;
 }

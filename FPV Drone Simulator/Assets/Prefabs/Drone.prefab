@@ -1100,6 +1100,7 @@ GameObject:
   - component: {fileID: 4980151139782636693}
   - component: {fileID: 5970815098609117203}
   - component: {fileID: 1793412245097766291}
+  - component: {fileID: -5271861732119935943}
   - component: {fileID: 7586687320102597130}
   m_Layer: 0
   m_Name: Drone
@@ -1216,6 +1217,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-5271861732119935943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6781842023141840192}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: 0}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!114 &7586687320102597130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1229,10 +1260,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MotorSpeed: 100
-  _frontLeftMotor: {fileID: 7253385933593155867}
-  _frontRightMotor: {fileID: 8995038162993741757}
-  _backLeftMotor: {fileID: 3383456029780767476}
-  _backRightMotor: {fileID: 1131195572410436208}
+  MaxThrottle: 2.5
+  _frontLeftMotorTransform: {fileID: 0}
+  _frontRightMotorTransform: {fileID: 0}
+  _backLeftMotorTransform: {fileID: 0}
+  _backRightMotorTransform: {fileID: 0}
 --- !u!1 &7050778871410997741
 GameObject:
   m_ObjectHideFlags: 0
