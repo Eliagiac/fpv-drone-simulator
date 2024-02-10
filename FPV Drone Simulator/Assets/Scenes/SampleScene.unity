@@ -123,6 +123,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &330585546 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 330585546, guid: d914ffd1b739b1a4181db24b7df73533,
+    type: 3}
+  m_PrefabInstance: {fileID: 5970815099928089769}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,17 +560,27 @@ PrefabInstance:
     - target: {fileID: 7586687320102597130, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
       propertyPath: MaxRoll
-      value: 300
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 7586687320102597130, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
+      propertyPath: _camera
+      value: 
+      objectReference: {fileID: 330585546}
+    - target: {fileID: 7586687320102597130, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
       propertyPath: MaxPitch
-      value: 300
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 7586687320102597130, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
       propertyPath: MotorPower
       value: 4000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7586687320102597130, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: CameraAngle
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d914ffd1b739b1a4181db24b7df73533, type: 3}

@@ -1329,8 +1329,8 @@ Rigidbody:
   m_GameObject: {fileID: 6781842023141840192}
   serializedVersion: 2
   m_Mass: 0.715
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Drag: 0.45
+  m_AngularDrag: 0.8
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -1380,10 +1380,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraAngle: 35
-  MotorPower: 2000
-  MaxPitch: 100
-  MaxRoll: 100
-  MaxYaw: 100
+  MotorPower: 3000
+  MaxPitch: 500
+  MaxRoll: 500
+  MaxYaw: 300
+  _camera: {fileID: 330585546}
 --- !u!1 &7050778871410997741
 GameObject:
   m_ObjectHideFlags: 0

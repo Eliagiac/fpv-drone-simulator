@@ -55,7 +55,7 @@
                 {
                     "name": "IJKL",
                     "id": "38bf7aee-9557-47ab-9d54-fa525500ac5b",
-                    "path": "2DVector",
+                    "path": "2DVector(mode=2)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -110,7 +110,7 @@
                 {
                     "name": "RStick",
                     "id": "3ce68461-c05e-4629-8d59-4937d98b9e3e",
-                    "path": "2DVector",
+                    "path": "2DVector(mode=2)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

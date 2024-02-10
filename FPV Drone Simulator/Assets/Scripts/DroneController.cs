@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public class DroneController : MonoBehaviour
 {
+    [Header("Drone Settings")]
     public float CameraAngle = 35f;
 
     public float MotorPower = 100f;
@@ -14,7 +15,13 @@ public class DroneController : MonoBehaviour
     public float MaxRoll = 1.0f;
     public float MaxYaw = 1.0f;
 
+
+    [Header("References")]
+    [SerializeField] private Transform _camera;
+
+
     private Rigidbody _rb;
+
 
     public Vector2 Cyclic { get; private set; }
     public float Pedals { get; private set; }
@@ -24,7 +31,9 @@ public class DroneController : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+
         ResetRotation();
+        _camera.localEulerAngles = new(90 - CameraAngle, 0, 0);
     }
 
     private void FixedUpdate()
@@ -44,10 +53,10 @@ public class DroneController : MonoBehaviour
     private void ApplyRotation()
     {
         float pitch = -Cyclic.y * MaxPitch * Time.fixedDeltaTime;
-        float yaw = Pedals * MaxYaw * Time.fixedDeltaTime;
-        float roll = Cyclic.x * MaxRoll * Time.fixedDeltaTime;
+        float yaw = Cyclic.x * MaxYaw * Time.fixedDeltaTime;
+        float roll = Pedals * MaxRoll * Time.fixedDeltaTime;
 
-        _rb.MoveRotation(transform.rotation * Quaternion.Euler(pitch, yaw, roll));
+        _rb.MoveRotation(transform.rotation * Quaternion.Euler(pitch, roll, yaw));
     }
 
     private void ResetRotation(float z = 0) => transform.eulerAngles = new(CameraAngle - 90, 0, z);
