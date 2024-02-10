@@ -108,8 +108,7 @@ public class DroneController : MonoBehaviour
 
     private void ApplyRotation()
     {
-
-        float pitch = Cyclic.y * MaxPitch;
+        float pitch = -Cyclic.y * MaxPitch;
         float yaw = Pedals * MaxYaw;
         float roll = Cyclic.x * MaxRoll;
 
