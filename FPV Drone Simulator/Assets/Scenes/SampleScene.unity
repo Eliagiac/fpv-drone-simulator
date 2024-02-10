@@ -206,14 +206,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.46174863, y: 0, z: 0, w: 0.8870109}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 526843996}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 55, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -340,7 +340,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &410087042
 MonoBehaviour:
@@ -362,6 +362,12 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!4 &526843996 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2973684535351803768, guid: d914ffd1b739b1a4181db24b7df73533,
+    type: 3}
+  m_PrefabInstance: {fileID: 5970815099928089769}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &808402617
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +421,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: d0e49efb17d4b8d4fa06966347b3a79f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -458,7 +464,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
@@ -507,7 +513,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1478559774 stripped
 Transform:
@@ -530,7 +536,7 @@ PrefabInstance:
     - target: {fileID: 5704695422342959601, guid: 178be16b29abad147ab5d053e2696c23,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5704695422342959601, guid: 178be16b29abad147ab5d053e2696c23,
         type: 3}
@@ -622,7 +628,7 @@ PrefabInstance:
     - target: {fileID: 6149139518233497594, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6149139518233497594, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
@@ -687,7 +693,7 @@ PrefabInstance:
     - target: {fileID: 7586687320102597130, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
       propertyPath: MotorPower
-      value: 300
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 7586687320102597130, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
