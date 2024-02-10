@@ -8,42 +8,108 @@ public class DroneController : MonoBehaviour
     public float MotorSpeed = 100f;
     public float MaxThrottle = 2.5f;
 
-    [SerializeField] private Transform _frontLeftMotor;
-    [SerializeField] private Transform _frontRightMotor;
-    [SerializeField] private Transform _backLeftMotor;
-    [SerializeField] private Transform _backRightMotor;
+    public Motor FrontLeftMotor;
+    public Motor FrontRightMotor;
+    public Motor BackLeftMotor;
+    public Motor BackRightMotor;
+
+    [SerializeField] private Transform _frontLeftMotorTransform;
+    [SerializeField] private Transform _frontRightMotorTransform;
+    [SerializeField] private Transform _backLeftMotorTransform;
+    [SerializeField] private Transform _backRightMotorTransform;
 
     private Rigidbody _rb;
 
-    private float _currentThrottle = 0f;
 
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+
+        FrontLeftMotor = new(_frontLeftMotorTransform.position);
+        FrontRightMotor = new(_frontRightMotorTransform.position);
+        BackLeftMotor = new(_backLeftMotorTransform.position);
+        BackRightMotor = new(_backRightMotorTransform.position);
+    }
+
+    private void Update()
+    {
+        Throttle(Mathf.Clamp(Input.GetAxis("Vertical"), 0, MaxThrottle));
     }
 
     private void FixedUpdate()
     {
-        UpdateThrottle();
-        Debug.Log(_currentThrottle);
-        ApplyThrust(_currentThrottle, _currentThrottle, _currentThrottle, _currentThrottle);
+        ApplyThrust();
     }
 
-    private float UpdateThrottle()
+
+    private void Throttle(float amount)
     {
-        _currentThrottle += Input.GetAxis("Vertical");
-        _currentThrottle = Mathf.Clamp( _currentThrottle, 0, MaxThrottle);
-
-        return _currentThrottle;
+        FrontLeftMotor.SetPower(amount);
+        FrontRightMotor.SetPower(amount);
+        BackLeftMotor.SetPower(amount);
+        BackRightMotor.SetPower(amount);
     }
 
-    public void ApplyThrust(float frontLeft, float frontRight, float backLeft, float backRight)
+    private void Pitch(float amount)
     {
-        _rb.AddForceAtPosition(BaseThrust() * frontLeft, _frontLeftMotor.position);
-        _rb.AddForceAtPosition(BaseThrust() * frontRight, _frontRightMotor.position);
-        _rb.AddForceAtPosition(BaseThrust() * backLeft, _backLeftMotor.position);
-        _rb.AddForceAtPosition(BaseThrust() * backRight, _backRightMotor.position);
+        // Pitch upwards.
+        if (amount > 0)
+        {
+            FrontLeftMotor.AddPower(amount);
+            FrontRightMotor.AddPower(amount);
+        }
 
-        Vector3 BaseThrust() => transform.forward * MotorSpeed * Time.fixedDeltaTime;
+        // Pitch downwards.
+        else
+        {
+            BackLeftMotor.AddPower(amount);
+            BackRightMotor.AddPower(amount);
+        }
     }
+
+    private void Roll(float amount)
+    {
+        // Roll right.
+        if (amount > 0) 
+        {
+            FrontLeftMotor.AddPower(amount);
+            BackLeftMotor.AddPower(amount);
+        }
+
+        // Roll left.
+        else
+        {
+            FrontRightMotor.AddPower(amount);
+            BackRightMotor.AddPower(amount);
+        }
+    }
+
+    private void Yaw(float amount)
+    {
+        // Yaw right.
+        if (amount > 0)
+        {
+            FrontRightMotor.AddPower(amount);
+            BackLeftMotor.AddPower(amount);
+        }
+
+        // Yaw left.
+        else
+        {
+            FrontLeftMotor.AddPower(amount);
+            BackRightMotor.AddPower(amount);
+        }
+    }
+
+    private void ApplyThrust()
+    {
+        Debug.Log($"{FrontLeftMotor.GetPower()} {FrontRightMotor.GetPower()} {BackLeftMotor.GetPower()} {BackRightMotor.GetPower()}");
+
+        _rb.AddForceAtPosition(BaseThrust() * FrontLeftMotor.GetPower(), FrontLeftMotor.Position);
+        _rb.AddForceAtPosition(BaseThrust() * FrontRightMotor.GetPower(), FrontRightMotor.Position);
+        _rb.AddForceAtPosition(BaseThrust() * BackLeftMotor.GetPower(), BackLeftMotor.Position);
+        _rb.AddForceAtPosition(BaseThrust() * BackRightMotor.GetPower(), BackRightMotor.Position);
+    }
+
+    private Vector3 BaseThrust() => transform.forward * MotorSpeed * Time.fixedDeltaTime;
 }
