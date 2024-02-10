@@ -26,6 +26,8 @@ git clone https://github.com/yourusername/unity-fpv-drone-simulator.git
 
 - Use the left stick or WASD keys to control the drone's throttle and roll.
 - Use the right stick or IJKL keys to control the drone's pitch and yaw.
+- Press the right trigger or backspace to reset the drone's orientation.
+- Double-tap the right trigger or backspace to reset the drone's position.
 
 ## Roadmap
 - Customizable environments and tracks for training and testing purposes.
