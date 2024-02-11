@@ -26,6 +26,7 @@ public class DroneController : MonoBehaviour
 
     protected Rigidbody _rb;
     private List<Transform> _checkpoints = new();
+    private List<Transform> _checkpointsReached = new();
 
 
     public Vector2 Cyclic { get; protected set; }
@@ -54,7 +55,7 @@ public class DroneController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
 
-        foreach (Transform checkpoint in GameObject.FindGameObjectWithTag("Checkpoints").transform)
+        foreach (Transform checkpoint in GameObject.FindGameObjectWithTag("Checkpoints Parent").transform)
             _checkpoints.Add(checkpoint);
 
         ResetRotation();
@@ -64,6 +65,15 @@ public class DroneController : MonoBehaviour
     {
         ApplyThrottle();
         ApplyRotation();
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag != "Checkpoint") return;
+        if (_checkpointsReached.Contains(other.transform)) return;
+
+        NextCheckpoint++;
+        _checkpointsReached.Add(other.transform);
     }
 
     public double Fitness()
