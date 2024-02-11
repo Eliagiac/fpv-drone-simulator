@@ -31,6 +31,25 @@ public class NeuralNetwork
     }
 
     /// <summary>
+    /// Clone a neural network.
+    /// </summary>
+    public NeuralNetwork(NeuralNetwork other) : this(other.GetSize())
+    {
+        for (int i = 1; i < Nodes.Length; i++)
+        {
+            for (int j = 0; j < Nodes[i].Length; j++)
+            {
+                Biases[i][j] = other.Biases[i][j];
+
+                for (int k = 0; k < Nodes[i - 1].Length; k++)
+                {
+                    Weights[i][j][k] = other.Weights[i][j][k];
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Create a child network from two parents.
     /// </summary>
     /// <remarks>

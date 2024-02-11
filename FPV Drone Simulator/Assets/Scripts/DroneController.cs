@@ -66,13 +66,7 @@ public class DroneController : MonoBehaviour
         ApplyRotation();
     }
 
-
-    protected void ResetRotation(float z = 0) => transform.eulerAngles = new(CameraAngle - 90, 0, z);
-
-    protected void ResetPosition() => transform.position = new(0, 0, 0);
-
-
-    protected double Fitness()
+    public double Fitness()
     {
         double score = 0;
 
@@ -82,6 +76,11 @@ public class DroneController : MonoBehaviour
 
         return score;
     }
+
+
+    protected void ResetRotation(float z = 0) => transform.eulerAngles = new(CameraAngle - 90, 0, z);
+
+    protected void ResetPosition() => transform.position = new(0, 0, 0);
 
 
     private Vector3 DistanceToNextCheckpoint(int i) =>
