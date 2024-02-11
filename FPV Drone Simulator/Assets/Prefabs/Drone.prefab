@@ -59,7 +59,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 75
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1220,7 +1220,7 @@ GameObject:
   - component: {fileID: 5970815098609117203}
   - component: {fileID: 1793412245097766291}
   - component: {fileID: -5271861732119935943}
-  - component: {fileID: 7586687320102597130}
+  - component: {fileID: 2566474568591975490}
   m_Layer: 0
   m_Name: Drone
   m_TagString: Untagged
@@ -1330,7 +1330,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 0.715
   m_Drag: 0.45
-  m_AngularDrag: 0.8
+  m_AngularDrag: 0.4
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -1367,7 +1367,7 @@ MonoBehaviour:
   m_DefaultActionMap: Drone
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &7586687320102597130
+--- !u!114 &2566474568591975490
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1376,7 +1376,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6781842023141840192}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38377d5d86d3c2b47bab213e84d625f4, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d2d745d8df1a9b4fa2c438ef5c8b73f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   CameraAngle: 35

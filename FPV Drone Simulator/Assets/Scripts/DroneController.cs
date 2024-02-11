@@ -20,12 +20,12 @@ public class DroneController : MonoBehaviour
     [SerializeField] private Transform _camera;
 
 
-    private Rigidbody _rb;
+    protected Rigidbody _rb;
 
 
-    public Vector2 Cyclic { get; private set; }
-    public float Pedals { get; private set; }
-    public float Throttle { get; private set; }
+    public Vector2 Cyclic { get; protected set; }
+    public float Pedals { get; protected set; }
+    public float Throttle { get; protected set; }
 
 
     private void Start()
@@ -43,6 +43,11 @@ public class DroneController : MonoBehaviour
     }
 
 
+    protected void ResetRotation(float z = 0) => transform.eulerAngles = new(CameraAngle - 90, 0, z);
+
+    protected void ResetPosition() => transform.position = new(0, 0, 0);
+
+
     private void ApplyThrottle()
     {
         Vector3 throttle = transform.forward * Throttle * MotorPower * Time.fixedDeltaTime;
@@ -57,28 +62,5 @@ public class DroneController : MonoBehaviour
         float roll = Pedals * MaxRoll * Time.fixedDeltaTime;
 
         _rb.MoveRotation(transform.rotation * Quaternion.Euler(pitch, roll, yaw));
-    }
-
-    private void ResetRotation(float z = 0) => transform.eulerAngles = new(CameraAngle - 90, 0, z);
-
-    private void ResetPosition() => transform.position = new(0, 0, 0);
-
-
-    private void OnCyclic(InputValue value) => Cyclic = value.Get<Vector2>();
-
-    private void OnPedals(InputValue value) => Pedals = value.Get<float>();
-
-    // The throttle is bewteen 0 and 1, not -1 and 1.
-    private void OnThrottle(InputValue value) => Throttle = (value.Get<float>() + 1) / 2f;
-
-    private void OnResetRotation() => ResetRotation(transform.eulerAngles.z);
-
-    private void OnResetPosition()
-    {
-        ResetRotation();
-        ResetPosition();
-
-        _rb.velocity = Vector3.zero;
-        _rb.angularVelocity = Vector3.zero;
     }
 }

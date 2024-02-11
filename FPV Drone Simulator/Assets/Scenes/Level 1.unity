@@ -987,15 +987,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 330585545, guid: d914ffd1b739b1a4181db24b7df73533, type: 3}
-      propertyPath: field of view
-      value: 75
-      objectReference: {fileID: 0}
-    - target: {fileID: 1793412245097766291, guid: d914ffd1b739b1a4181db24b7df73533,
-        type: 3}
-      propertyPath: m_AngularDrag
-      value: 0.4
-      objectReference: {fileID: 0}
     - target: {fileID: 6149139518233497594, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
       propertyPath: m_RootOrder
