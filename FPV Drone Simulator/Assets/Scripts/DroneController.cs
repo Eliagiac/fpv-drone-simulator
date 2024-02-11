@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -20,6 +21,9 @@ public class DroneController : MonoBehaviour
     [SerializeField] private Transform _camera;
     [SerializeField] private Transform[] _checkpoints;
 
+    [Header("Stats")]
+    [SerializeField] protected int NextCheckpoint;
+
 
     protected Rigidbody _rb;
 
@@ -27,6 +31,12 @@ public class DroneController : MonoBehaviour
     public Vector2 Cyclic { get; protected set; }
     public float Pedals { get; protected set; }
     public float Throttle { get; protected set; }
+
+
+    protected float HorizontalVelocity => _rb.velocity.x;
+    protected float VerticalVelocity => _rb.velocity.y;
+    protected Vector3[] DistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => DistanceToNextCheckpoint(i)).ToArray();
+    protected float[] AngularDistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => AngularDistanceToNextCheckpoint(i)).ToArray();
 
 
     private void Start()
@@ -47,6 +57,15 @@ public class DroneController : MonoBehaviour
     protected void ResetRotation(float z = 0) => transform.eulerAngles = new(CameraAngle - 90, 0, z);
 
     protected void ResetPosition() => transform.position = new(0, 0, 0);
+
+
+    private Vector3 DistanceToNextCheckpoint(int i) =>
+        _checkpoints.Length > NextCheckpoint + i ?
+        (_checkpoints[NextCheckpoint].position - transform.position) : Vector3.zero;
+
+    private float AngularDistanceToNextCheckpoint(int i) =>
+        _checkpoints.Length > NextCheckpoint + i ?
+        (_checkpoints[NextCheckpoint].eulerAngles.y - transform.eulerAngles.y) : 0;
 
 
     private void ApplyThrottle()
