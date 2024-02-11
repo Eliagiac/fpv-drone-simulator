@@ -16,12 +16,16 @@ public class DroneController : MonoBehaviour
     public float MaxRoll = 1.0f;
     public float MaxYaw = 1.0f;
 
+    [Header("Fitness Function Weights")]
+    [SerializeField, Range(1, 10)] private double _checkpointsReachedMultiplier = 2;
+    [SerializeField] private double _distanceToNextCheckpointWeight = 0.2;
+
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
 
 
     protected Rigidbody _rb;
-    private Transform[] _checkpoints;
+    private List<Transform> _checkpoints = new();
 
 
     public Vector2 Cyclic { get; protected set; }
@@ -49,7 +53,9 @@ public class DroneController : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _checkpoints = GameObject.FindGameObjectWithTag("Checkpoints").GetComponentsInChildren<Transform>();
+
+        foreach (Transform checkpoint in GameObject.FindGameObjectWithTag("Checkpoints").transform)
+            _checkpoints.Add(checkpoint);
 
         ResetRotation();
     }
@@ -66,17 +72,34 @@ public class DroneController : MonoBehaviour
     protected void ResetPosition() => transform.position = new(0, 0, 0);
 
 
-    private Vector3 DistanceToNextCheckpoint(int i) =>
-        _checkpoints.Length > NextCheckpoint + i ?
-        (_checkpoints[NextCheckpoint].position - transform.position) : Vector3.zero;
+    protected double Fitness()
+    {
+        double score = 0;
 
-    private float AngularDistanceToNextCheckpoint(int i) =>
-        _checkpoints.Length > NextCheckpoint + i ?
-        (_checkpoints[NextCheckpoint].eulerAngles.y - transform.eulerAngles.y) : 0;
+        score += (1 / DistanceToNextCheckpoint(0).magnitude) * _distanceToNextCheckpointWeight;
+
+        for (int i = 0; i <= NextCheckpoint; i++) score *= _checkpointsReachedMultiplier;
+
+        return score;
+    }
+
+
+    private Vector3 DistanceToNextCheckpoint(int i) =>
+        _checkpoints.Count > NextCheckpoint + i ?
+        (_checkpoints[NextCheckpoint + i].position - transform.position) : Vector3.zero;
+
+    private float AngularDistanceToNextCheckpoint(int i)
+    {
+        float angle = _checkpoints.Count > NextCheckpoint + i ?
+        (_checkpoints[NextCheckpoint + i].eulerAngles.y - transform.eulerAngles.y) : 0;
+
+        // Normalize the distance in the range -180 to 180 degrees.
+        return angle > 180 ? angle : angle - 360;
+    }
 
     private float NextCheckpointSize(int i) =>
-        _checkpoints.Length > NextCheckpoint + i ?
-        (_checkpoints[NextCheckpoint].GetChild(0).localScale.x) : 0;
+        _checkpoints.Count > NextCheckpoint + i ?
+        (_checkpoints[NextCheckpoint + i].GetChild(0).localScale.x) : 0;
 
 
     private void ApplyThrottle()

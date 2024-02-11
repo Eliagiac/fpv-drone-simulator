@@ -144,7 +144,7 @@ public class NeuralNetwork
                 return 1 / (1 + Math.Pow(Math.E, -input));
 
             default:
-                throw new NotImplementedException("The selected activation function has no implementation.");
+                throw new NotImplementedException("The selected activation function was not implemented.");
         }
     }
 

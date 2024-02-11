@@ -9,26 +9,31 @@ public class AIController : DroneController
 
     private void Update()
     {
+        Vector3[] distanceToNextCheckpoints = DistanceToNextCheckpoints;
+        float[] angularDistanceToNextCheckpoints = AngularDistanceToNextCheckpoints;
+        float[] nextCheckpointsSize = NextCheckpointsSize;
+
+
         double[] outputs = NeuralNetwork.FeedForward(new double[]
         {
             HorizontalVelocity,
             VerticalVelocity,
             HeightFromGround,
-            DistanceToNextCheckpoints[0].x,
-            DistanceToNextCheckpoints[0].y,
-            DistanceToNextCheckpoints[0].z,
-            DistanceToNextCheckpoints[1].x,
-            DistanceToNextCheckpoints[1].y,
-            DistanceToNextCheckpoints[1].z,
-            DistanceToNextCheckpoints[2].x,
-            DistanceToNextCheckpoints[2].y,
-            DistanceToNextCheckpoints[2].z,
-            AngularDistanceToNextCheckpoints[0],
-            AngularDistanceToNextCheckpoints[1],
-            AngularDistanceToNextCheckpoints[2],
-            NextCheckpointsSize[0],
-            NextCheckpointsSize[1],
-            NextCheckpointsSize[2]
+            distanceToNextCheckpoints[0].x,
+            distanceToNextCheckpoints[0].y,
+            distanceToNextCheckpoints[0].z,
+            distanceToNextCheckpoints[1].x,
+            distanceToNextCheckpoints[1].y,
+            distanceToNextCheckpoints[1].z,
+            distanceToNextCheckpoints[2].x,
+            distanceToNextCheckpoints[2].y,
+            distanceToNextCheckpoints[2].z,
+            angularDistanceToNextCheckpoints[0],
+            angularDistanceToNextCheckpoints[1],
+            angularDistanceToNextCheckpoints[2],
+            nextCheckpointsSize[0],
+            nextCheckpointsSize[1],
+            nextCheckpointsSize[2]
         });
 
         Throttle = ((float)outputs[0] + 1) / 2f;
