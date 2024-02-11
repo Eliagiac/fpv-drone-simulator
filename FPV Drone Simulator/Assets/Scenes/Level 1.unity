@@ -987,6 +987,41 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2566474568591975490, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: _checkpoints.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2566474568591975490, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: _checkpoints.Array.data[0]
+      value: 
+      objectReference: {fileID: 1718272354}
+    - target: {fileID: 2566474568591975490, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: _checkpoints.Array.data[1]
+      value: 
+      objectReference: {fileID: 1657333319}
+    - target: {fileID: 2566474568591975490, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: _checkpoints.Array.data[2]
+      value: 
+      objectReference: {fileID: 1419081164}
+    - target: {fileID: 2566474568591975490, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: _checkpoints.Array.data[3]
+      value: 
+      objectReference: {fileID: 285973646}
+    - target: {fileID: 2566474568591975490, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: _checkpoints.Array.data[4]
+      value: 
+      objectReference: {fileID: 1029618816}
+    - target: {fileID: 2566474568591975490, guid: d914ffd1b739b1a4181db24b7df73533,
+        type: 3}
+      propertyPath: _checkpoints.Array.data[5]
+      value: 
+      objectReference: {fileID: 1509678204}
     - target: {fileID: 6149139518233497594, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
       propertyPath: m_RootOrder

@@ -18,6 +18,7 @@ public class DroneController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform _camera;
+    [SerializeField] private Transform[] _checkpoints;
 
 
     protected Rigidbody _rb;
