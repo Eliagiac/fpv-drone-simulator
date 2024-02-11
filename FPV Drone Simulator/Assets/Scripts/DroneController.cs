@@ -37,6 +37,17 @@ public class DroneController : MonoBehaviour
     protected float VerticalVelocity => _rb.velocity.y;
     protected Vector3[] DistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => DistanceToNextCheckpoint(i)).ToArray();
     protected float[] AngularDistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => AngularDistanceToNextCheckpoint(i)).ToArray();
+    protected float[] NextCheckpointsSize => Enumerable.Range(0, 3).Select(i => NextCheckpointSize(i)).ToArray();
+    protected float HeightFromGround 
+    {
+        get
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
+                return hit.distance;
+
+            else return 0;
+        }
+    }
 
 
     private void Start()
@@ -66,6 +77,10 @@ public class DroneController : MonoBehaviour
     private float AngularDistanceToNextCheckpoint(int i) =>
         _checkpoints.Length > NextCheckpoint + i ?
         (_checkpoints[NextCheckpoint].eulerAngles.y - transform.eulerAngles.y) : 0;
+
+    private float NextCheckpointSize(int i) =>
+        _checkpoints.Length > NextCheckpoint + i ?
+        (_checkpoints[NextCheckpoint].GetChild(0).localScale.x) : 0;
 
 
     private void ApplyThrottle()
