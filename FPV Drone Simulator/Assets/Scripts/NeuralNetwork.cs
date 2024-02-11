@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using System.Linq;
 
-public class NeuralNetwork : MonoBehaviour
+public class NeuralNetwork
 {
     public double[][] Nodes;
     public double[][] Biases;
@@ -30,6 +30,38 @@ public class NeuralNetwork : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Create a child network from two parents.
+    /// </summary>
+    /// <remarks>
+    /// The parents must have the same network size.
+    /// </remarks>
+    public NeuralNetwork(NeuralNetwork parent1, NeuralNetwork parent2) : this(parent1.GetSize())
+    {
+
+    }
+
+
+    public int[] GetSize() => Nodes.Select(layer => layer.Length).ToArray();
+
+
+    public void RandomizeWeightsAndBiases(double biasRange, double weightRange)
+    {
+        Random rng = new Random();
+        
+        for (int i = 1; i < Nodes.Length; i++)
+        {
+            for (int j = 0; j < Nodes[i].Length; j++)
+            {
+                Biases[i][j] = rng.NextDouble() * biasRange;
+
+                for (int k = 0; k < Nodes[i - 1].Length; k++)
+                {
+                    Weights[i][j][k] = rng.NextDouble() * weightRange;
+                }
+            }
+        }
+    }
 
     public void FeedForward(double[] inputs)
     {
