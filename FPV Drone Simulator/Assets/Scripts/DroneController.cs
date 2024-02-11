@@ -19,13 +19,13 @@ public class DroneController : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Transform _camera;
-    [SerializeField] private Transform[] _checkpoints;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
 
 
     protected Rigidbody _rb;
+    private Transform[] _checkpoints;
 
 
     public Vector2 Cyclic { get; protected set; }
@@ -53,6 +53,7 @@ public class DroneController : MonoBehaviour
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _checkpoints = GameObject.FindGameObjectWithTag("Checkpoints").GetComponentsInChildren<Transform>();
 
         ResetRotation();
         _camera.localEulerAngles = new(90 - CameraAngle, 0, 0);

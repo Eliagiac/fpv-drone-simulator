@@ -291,7 +291,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!114 &410087042
 MonoBehaviour:
@@ -325,12 +325,12 @@ GameObject:
   - component: {fileID: 808402620}
   - component: {fileID: 808402619}
   - component: {fileID: 808402618}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!64 &808402618
 MeshCollider:
@@ -464,7 +464,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &977613311
 PrefabInstance:
@@ -610,6 +610,37 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 988420475}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1069271991
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1069271992}
+  m_Layer: 0
+  m_Name: AI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1069271992
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069271991}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -24.461586, y: 2.3656178, z: -36.917557}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1223885136
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -690,7 +721,7 @@ GameObject:
   - component: {fileID: 1931353144}
   m_Layer: 0
   m_Name: Checkpoints
-  m_TagString: Untagged
+  m_TagString: Checkpoints
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -888,7 +919,7 @@ Transform:
   - {fileID: 808402621}
   - {fileID: 814188747}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1931353144
 Transform:
@@ -909,7 +940,7 @@ Transform:
   - {fileID: 1029618816}
   - {fileID: 1509678204}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1932505435
 PrefabInstance:
@@ -1080,7 +1111,7 @@ PrefabInstance:
     - target: {fileID: 6781842023141840192, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
       propertyPath: m_Name
-      value: Drone
+      value: Manual Drone
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d914ffd1b739b1a4181db24b7df73533, type: 3}
