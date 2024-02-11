@@ -38,7 +38,45 @@ public class NeuralNetwork
     /// </remarks>
     public NeuralNetwork(NeuralNetwork parent1, NeuralNetwork parent2) : this(parent1.GetSize())
     {
+        Random rng = new Random();
 
+        for (int i = 1; i < Nodes.Length; i++)
+        {
+            for (int j = 0; j < Nodes[i].Length; j++)
+            {
+                double bias = rng.NextDouble() < 0.5 ? parent1.Biases[i][j] : parent2.Biases[i][j];
+
+                int threshold = (int)Math.Round(rng.NextDouble() * Nodes[i - 1].Length);
+
+                double[] weights = new double[Nodes[i - 1].Length];
+                for (int k = 0; k < weights.Length; k++)
+                {
+                    if (k < threshold) weights[k] = parent1.Weights[i][j][k];
+                    else weights[k] = parent2.Weights[i][j][k];
+                }
+
+                Biases[i][j] = MutateBias(bias);
+                Weights[i][j] = MutateWeights(weights);
+            }
+        }
+
+        double MutateBias(double bias)
+        {
+            // Mutate by a factor from 2 to 5.
+            if (rng.NextDouble() < 0.05) bias = bias * (rng.Next(4) + 2);
+
+            return bias;
+        }
+
+        double[] MutateWeights(double[] weights)
+        {
+            int selection = rng.Next(Weights.Length);
+
+            // Mutate the selected weight by a factor from 2 to 5.
+            if (rng.NextDouble() < 0.05) weights[selection] = weights[selection] * (rng.Next(4) + 2);
+
+            return weights;
+        }
     }
 
 
