@@ -16,10 +16,6 @@ public class DroneController : MonoBehaviour
     public float MaxRoll = 1.0f;
     public float MaxYaw = 1.0f;
 
-
-    [Header("References")]
-    [SerializeField] private Transform _camera;
-
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
 
@@ -35,10 +31,7 @@ public class DroneController : MonoBehaviour
 
     protected float HorizontalVelocity => _rb.velocity.x;
     protected float VerticalVelocity => _rb.velocity.y;
-    protected Vector3[] DistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => DistanceToNextCheckpoint(i)).ToArray();
-    protected float[] AngularDistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => AngularDistanceToNextCheckpoint(i)).ToArray();
-    protected float[] NextCheckpointsSize => Enumerable.Range(0, 3).Select(i => NextCheckpointSize(i)).ToArray();
-    protected float HeightFromGround 
+    protected float HeightFromGround
     {
         get
         {
@@ -48,6 +41,9 @@ public class DroneController : MonoBehaviour
             else return 0;
         }
     }
+    protected Vector3[] DistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => DistanceToNextCheckpoint(i)).ToArray();
+    protected float[] AngularDistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => AngularDistanceToNextCheckpoint(i)).ToArray();
+    protected float[] NextCheckpointsSize => Enumerable.Range(0, 3).Select(i => NextCheckpointSize(i)).ToArray();
 
 
     private void Start()
@@ -56,7 +52,6 @@ public class DroneController : MonoBehaviour
         _checkpoints = GameObject.FindGameObjectWithTag("Checkpoints").GetComponentsInChildren<Transform>();
 
         ResetRotation();
-        _camera.localEulerAngles = new(90 - CameraAngle, 0, 0);
     }
 
     private void FixedUpdate()

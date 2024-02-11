@@ -101,9 +101,9 @@ public class NeuralNetwork
         }
     }
 
-    public void FeedForward(double[] inputs)
+    public double[] FeedForward(double[] inputs)
     {
-        if (inputs.Length != Nodes.Length) throw new ArgumentException(
+        if (inputs.Length != Nodes[0].Length) throw new ArgumentException(
             "The size of the inputs array does not match the size of the first layer of the network!");
 
         Nodes[0] = inputs;
@@ -119,13 +119,39 @@ public class NeuralNetwork
                     weightedSum += Nodes[i - 1][k] * Weights[i][j][k];
                 }
 
-                Nodes[i][j] = ActivationFunction(weightedSum);
+                if (i == Nodes.Length - 1) 
+                    Nodes[i][j] = (ComputeNode(weightedSum, ActivationFunction.Sigmoid) * 2) - 1;
+
+                else 
+                    Nodes[i][j] = ComputeNode(weightedSum, ActivationFunction.LeakyReLU);
             }
+        }
+
+        return Nodes[^1];
+    }
+
+    private double ComputeNode(double input, ActivationFunction activationFunction)
+    {
+        switch (activationFunction)
+        {
+            case ActivationFunction.ReLU:
+                return input > 0 ? input : 0;
+
+            case ActivationFunction.LeakyReLU:
+                return input > 0 ? input : input * 0.01;
+
+            case ActivationFunction.Sigmoid:
+                return 1 / (1 + Math.Pow(Math.E, -input));
+
+            default:
+                throw new NotImplementedException("The selected activation function has no implementation.");
         }
     }
 
-    private double ActivationFunction(double input)
+    public enum ActivationFunction
     {
-        return input;
+        ReLU,
+        LeakyReLU,
+        Sigmoid
     }
 }

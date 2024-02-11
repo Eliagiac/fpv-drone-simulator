@@ -5,6 +5,16 @@ using UnityEngine.InputSystem;
 
 public class ManualController : DroneController
 {
+    [Header("References")]
+    [SerializeField] private Transform _camera;
+
+
+    private void Start()
+    {
+        _camera.localEulerAngles = new(90 - CameraAngle, 0, 0);
+    }
+
+
     private void OnCyclic(InputValue value) => Cyclic = value.Get<Vector2>();
 
     private void OnPedals(InputValue value) => Pedals = value.Get<float>();
