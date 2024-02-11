@@ -15,7 +15,7 @@ public class AIManager : MonoBehaviour
             AIController drone = Instantiate(_dronePrefab, transform).GetComponent<AIController>();
 
             drone.NeuralNetwork = new(new[] { 18, 13, 4 });
-            drone.NeuralNetwork.RandomizeWeightsAndBiases(2, 5);
+            drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
         }
     }
 

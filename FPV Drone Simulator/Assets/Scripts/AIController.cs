@@ -31,7 +31,7 @@ public class AIController : DroneController
             NextCheckpointsSize[2]
         });
 
-        Throttle = (float)outputs[0];
+        Throttle = ((float)outputs[0] + 1) / 2f;
         Pedals = (float)outputs[1];
         Cyclic = new((float)outputs[2], (float)outputs[3]);
     }
