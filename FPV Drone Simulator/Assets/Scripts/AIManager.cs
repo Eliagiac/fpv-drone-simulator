@@ -25,6 +25,7 @@ public class AIManager : MonoBehaviour
 
     private static int s_currentWeightSaveFileIndex;
 
+    private float GenDuration => 3 + (_genCount * 0.1f);
     public static string WeightsFilePath => Application.persistentDataPath + "/weights" + s_currentWeightSaveFileIndex + ".txt";
 
 
@@ -53,7 +54,7 @@ public class AIManager : MonoBehaviour
         _genTimer += Time.deltaTime;
         _updateGuiTimer += Time.deltaTime;
 
-        if (_genTimer >= 3 + (_genCount * 0.2f)) 
+        if (_genTimer >= GenDuration) 
         {
             _genTimer = 0;
             _genCount++;
@@ -67,6 +68,7 @@ public class AIManager : MonoBehaviour
 
             _gui.text =
             $"Current generation: {_genCount}\n" +
+            $"Duration: {GenDuration}\n" +
             $"Alive: {_previousGenDrones.Count}\n" +
             $"Best fitness: {_previousGenDrones.OrderBy(drone => drone.Fitness()).Reverse().First().Fitness()}";
         }

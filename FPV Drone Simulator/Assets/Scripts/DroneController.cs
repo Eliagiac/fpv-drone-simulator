@@ -19,7 +19,7 @@ public class DroneController : MonoBehaviour
     [Header("Fitness Function Weights")]
     [SerializeField, Range(1, 10)] private float _checkpointsReachedMultiplier = 2f;
     [SerializeField] private float _checkpointReachedWeight = 1f;
-    [SerializeField] private float _elevationWeight = 0.1f;
+    [SerializeField] private float _elevationWeight = 0.02f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;

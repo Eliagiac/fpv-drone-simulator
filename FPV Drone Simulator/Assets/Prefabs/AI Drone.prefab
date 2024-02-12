@@ -1234,8 +1234,10 @@ MonoBehaviour:
   MaxRoll: 500
   MaxYaw: 300
   _checkpointsReachedMultiplier: 2
-  _distanceToNextCheckpointWeight: 0.2
+  _checkpointReachedWeight: 1
+  _elevationWeight: 0.02
   NextCheckpoint: 0
+  _weightsFilePath: 
 --- !u!1 &7050778871410997741
 GameObject:
   m_ObjectHideFlags: 0
