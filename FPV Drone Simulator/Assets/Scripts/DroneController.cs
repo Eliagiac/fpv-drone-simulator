@@ -72,6 +72,7 @@ public class DroneController : MonoBehaviour
         ApplyRotation();
     }
 
+
     public void OnTriggerEnter(Collider other)
     {
         if (other.transform == _checkpoints[NextCheckpoint])
@@ -81,11 +82,15 @@ public class DroneController : MonoBehaviour
         }
     }
 
+
     public double Fitness()
     {
         double score = 0;
 
-        score += Mathf.Min((1 / DistanceToNextCheckpoint(0).magnitude) * _distanceToNextCheckpointWeight, _checkpointReachedWeight);
+        // Add a bonus based on the distance to the next checkpoint (lower is better).
+        // The bonus is calculated with a sigmoid function and can reach up to just
+        // below _checkpointReachedWeight when the distance is close to 0.
+        score += (_checkpointReachedWeight + 0.5 * _checkpointReachedWeight) * (1 / (1 + Math.Pow(Math.E, -0.1 * (-DistanceToNextCheckpoint(0).magnitude + 10))));
 
         for (int i = 0; i < NextCheckpoint; i++)
         {
