@@ -31,7 +31,7 @@ public class AIManager : MonoBehaviour
     {
         _genTimer += Time.deltaTime;
         
-        if (_genTimer >= 5) 
+        if (_genTimer >= 3 + (_genCount * 0.2f)) 
         {
             _genTimer = 0;
             _genCount++;

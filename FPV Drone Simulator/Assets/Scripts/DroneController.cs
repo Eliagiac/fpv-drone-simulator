@@ -17,8 +17,9 @@ public class DroneController : MonoBehaviour
     public float MaxYaw = 1.0f;
 
     [Header("Fitness Function Weights")]
-    [SerializeField, Range(1, 10)] private double _checkpointsReachedMultiplier = 2;
-    [SerializeField] private double _distanceToNextCheckpointWeight = 0.2;
+    [SerializeField, Range(1, 10)] private float _checkpointsReachedMultiplier = 2f;
+    [SerializeField] private float _checkpointReachedWeight = 1f;
+    [SerializeField] private float _distanceToNextCheckpointWeight = 0.2f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
@@ -84,9 +85,13 @@ public class DroneController : MonoBehaviour
     {
         double score = 0;
 
-        score += (1 / DistanceToNextCheckpoint(0).magnitude) * _distanceToNextCheckpointWeight;
+        score += Mathf.Min((1 / DistanceToNextCheckpoint(0).magnitude) * _distanceToNextCheckpointWeight, _checkpointReachedWeight);
 
-        for (int i = 0; i <= NextCheckpoint; i++) score *= _checkpointsReachedMultiplier;
+        for (int i = 0; i < NextCheckpoint; i++)
+        {
+            score += _checkpointReachedWeight;
+            score *= _checkpointsReachedMultiplier;
+        }
 
         return score;
     }

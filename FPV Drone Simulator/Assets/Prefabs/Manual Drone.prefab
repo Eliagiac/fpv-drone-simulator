@@ -1388,6 +1388,7 @@ MonoBehaviour:
   _distanceToNextCheckpointWeight: 0.2
   NextCheckpoint: 0
   _camera: {fileID: 330585546}
+  _gui: {fileID: 0}
 --- !u!1 &7050778871410997741
 GameObject:
   m_ObjectHideFlags: 0

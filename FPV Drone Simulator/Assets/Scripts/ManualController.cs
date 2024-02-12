@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,11 +8,18 @@ public class ManualController : DroneController
 {
     [Header("References")]
     [SerializeField] private Transform _camera;
+    [SerializeField] private TextMeshProUGUI _gui;
 
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         _camera.localEulerAngles = new(90 - CameraAngle, 0, 0);
+    }
+
+    private void Update()
+    {
+        _gui.text = $"Fitness: {Fitness()}";
     }
 
 
