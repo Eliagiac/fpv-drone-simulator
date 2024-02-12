@@ -2,25 +2,44 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
     public static readonly int[] NetworkSize = { 19, 16, 4 };
+    public static AIManager Instance;
 
     public int Population = 20;
 
+    [Header("References")]
+    [SerializeField] private TextMeshProUGUI _gui;
     [SerializeField] private GameObject _dronePrefab;
 
     private float _genTimer = 0;
     private int _genCount = 0;
-    private AIController[] _genDrones;
-    private AIController[] _previousGenDrones;
+    private List<AIController> _genDrones;
+    private List<AIController> _previousGenDrones;
 
     private static int s_currentWeightSaveFileIndex;
 
     public static string WeightsFilePath => Application.persistentDataPath + "/weights" + s_currentWeightSaveFileIndex + ".txt";
 
+
+    public void Kill(AIController drone)
+    {
+        // Always maintain at least half the drones.
+        if (_previousGenDrones.Count <= Population / 2) return;
+
+        _previousGenDrones.Remove(drone);
+        Destroy(drone.gameObject);
+    }
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -38,6 +57,10 @@ public class AIManager : MonoBehaviour
 
             ResetPopulation(false);
         }
+
+        _gui.text = 
+            $"Current generation: {_genCount}\n" +
+            $"Alive: {_previousGenDrones.Count}";
     }
 
     private void ResetPopulation(bool random = true)
@@ -54,18 +77,18 @@ public class AIManager : MonoBehaviour
             AIController previousBest = _previousGenDrones[0];
 
             // Sort the drones by fitness score in descending order (higher is better).
-            _previousGenDrones = _previousGenDrones.OrderBy(drone => drone.Fitness()).Reverse().ToArray();
+            _previousGenDrones = _previousGenDrones.OrderBy(drone => drone.Fitness()).Reverse().ToList();
 
             Debug.Log(
                 $"Best fitness in generation {_genCount}: {_previousGenDrones[0].Fitness()} \n" +
-                $"Previous best is in spot {Array.IndexOf(_previousGenDrones, previousBest)}.");
+                $"Previous best is in spot {_previousGenDrones.IndexOf(previousBest)}.");
 
             SaveWeights(_previousGenDrones[0].NeuralNetwork);
         }
 
         System.Random rng = new System.Random();
 
-        _genDrones = new AIController[Population];
+        _genDrones = new();
         for (int i = 0; i < Population; i++)
         {
             AIController drone = Instantiate(_dronePrefab, transform).GetComponent<AIController>();
@@ -83,13 +106,13 @@ public class AIManager : MonoBehaviour
                 if (i < 2) drone.NeuralNetwork = new(_previousGenDrones[i].NeuralNetwork);
 
                 else if (i < Mathf.Round(Population * 0.2f))
-                    CreateChildNetwork(Mathf.Min(5, _previousGenDrones.Length));
+                    CreateChildNetwork(Mathf.Min(5, _previousGenDrones.Count));
 
                 else if (i < Mathf.Round(Population * 0.5f))
-                    CreateChildNetwork(Mathf.Min(10, _previousGenDrones.Length));
+                    CreateChildNetwork(Mathf.Min(10, _previousGenDrones.Count));
 
                 else if (i < Population - 2)
-                    CreateChildNetwork(Mathf.Min(30, _previousGenDrones.Length));
+                    CreateChildNetwork(Mathf.Min(30, _previousGenDrones.Count));
 
                 else
                 {
@@ -110,10 +133,10 @@ public class AIManager : MonoBehaviour
                 }
             }
 
-            _genDrones[i] = drone;
+            _genDrones.Add(drone);
         }
 
-        _previousGenDrones = _genDrones;
+        _previousGenDrones = new(_genDrones);
     }
 
     private void SaveWeights(NeuralNetwork neuralNetwork)

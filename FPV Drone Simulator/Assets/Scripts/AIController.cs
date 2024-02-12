@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class AIController : DroneController
@@ -53,4 +54,7 @@ public class AIController : DroneController
         Pedals = (float)outputs[1];
         Cyclic = new((float)outputs[2], (float)outputs[3]);
     }
+
+
+    public void OnCollisionEnter(Collision collision) => AIManager.Instance.Kill(this);
 }
