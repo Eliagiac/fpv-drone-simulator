@@ -64,13 +64,17 @@ public class AIManager : MonoBehaviour
 
         if (_updateGuiTimer >= 0.1)
         {
-            _updateGuiTimer = 0;
+            if (_previousGenDrones.Count > 0)
+            {
+                _updateGuiTimer = 0;
 
-            _gui.text =
-            $"Current generation: {_genCount}\n" +
-            $"Duration: {GenDuration}\n" +
-            $"Alive: {_previousGenDrones.Count}\n" +
-            $"Best fitness: {_previousGenDrones.Max(drone => drone.Fitness())}";
+                _gui.text =
+                $"Current generation: {_genCount}\n" +
+                $"Duration: {GenDuration}\n" +
+                $"Alive: {_previousGenDrones.Count}\n" +
+                $"Best fitness: {_previousGenDrones.Max(drone => drone.Fitness())}\n" +
+                $"Highest checkpoint reached: {_previousGenDrones.Max(drone => drone.CheckpointsReached())}";
+            }
         }
     }
 

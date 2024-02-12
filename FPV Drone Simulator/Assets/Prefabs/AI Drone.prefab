@@ -1236,6 +1236,7 @@ MonoBehaviour:
   _checkpointsReachedMultiplier: 5
   _distanceToCheckpointPathMaxBonus: 2
   _checkpointReachedWeight: 1
+  _angularDistanceToNextCheckpointMaxBonus: 0.1
   _maxElevationWeight: 0.1
   NextCheckpoint: 0
   _weightsFilePath: 

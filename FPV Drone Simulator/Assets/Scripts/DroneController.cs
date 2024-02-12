@@ -21,6 +21,7 @@ public class DroneController : MonoBehaviour
     [SerializeField, Range(1, 10)] private float _checkpointsReachedMultiplier = 5f;
     [SerializeField] private float _distanceToCheckpointPathMaxBonus = 2f;
     [SerializeField] private float _checkpointReachedWeight = 1f;
+    [SerializeField] private float _angularDistanceToNextCheckpointMaxBonus = 0.5f;
     [SerializeField] private float _maxElevationWeight = 0.1f;
 
     [Header("Stats")]
@@ -38,9 +39,11 @@ public class DroneController : MonoBehaviour
     public float Throttle { get; protected set; }
 
 
-    protected float DroneAngleX => transform.eulerAngles.x;
-    protected float DroneAngleY => transform.eulerAngles.y;
-    protected float DroneAngleZ => transform.eulerAngles.z;
+    private Vector3 DroneRotation => new(transform.eulerAngles.x + 90, transform.eulerAngles.y, transform.eulerAngles.z);
+
+    protected float DroneAngleX => DroneRotation.x;
+    protected float DroneAngleY => DroneRotation.y;
+    protected float DroneAngleZ => DroneRotation.z;
     protected float DroneVelocityX => _rb.velocity.x;
     protected float DroneVelocityY => _rb.velocity.y;
     protected float DroneVelocityZ => _rb.velocity.z;
@@ -100,6 +103,9 @@ public class DroneController : MonoBehaviour
         // Add a bonus based on how close the drone is to the path leading to the next checkpoint.
         score += DistanceBonus(DistanceToCheckpointPath(), _distanceToCheckpointPathMaxBonus);
 
+        // Add a bonus for how close the drone's orientation is to that of the next checkpoint.
+        score += DistanceBonus(AngularDistanceToNextCheckpoint(), _angularDistanceToNextCheckpointMaxBonus, 0.04);
+
         score += _maxElevationWeight - Math.Min(_maxElevationWeight, (_maxElevationReached / 20f) * _maxElevationWeight);
 
         for (int i = 0; i < NextCheckpoint; i++)
@@ -111,7 +117,7 @@ public class DroneController : MonoBehaviour
         return score;
 
 
-        double DistanceBonus(double distance, float maxBonus) => (maxBonus + 0.5 * maxBonus) * (1 / (1 + Math.Pow(Math.E, -0.1 * (-distance + 10))));
+        double DistanceBonus(double distance, float maxBonus, double slope = 0.1) => (maxBonus + 0.5 * maxBonus) * (1 / (1 + Math.Pow(Math.E, -slope * (-distance + (1 / slope)))));
 
         double DistanceToCheckpointPath()
         {
@@ -121,7 +127,9 @@ public class DroneController : MonoBehaviour
                 _checkpoints[NextCheckpoint].position.z);
 
             Vector3 directionToNextCheckpoint = (_checkpoints[NextCheckpoint].position - transform.position).normalized;
-            Vector3 checkpointDirection = _checkpoints[NextCheckpoint].eulerAngles;
+
+            // Turn the rotation of the checkpoint to a unit vector representing its direction.
+            Vector3 checkpointDirection = Quaternion.Euler(_checkpoints[NextCheckpoint].eulerAngles) * Vector3.forward;
 
             // First determine wether the drone has passed the checkpoint.
             bool passed = Vector3.Angle(directionToNextCheckpoint, checkpointDirection) > 90;
@@ -132,7 +140,14 @@ public class DroneController : MonoBehaviour
 
             return distance;
         }
+
+        double AngularDistanceToNextCheckpoint() => Vector3.Angle(
+            Quaternion.Euler(DroneRotation) * Vector3.forward,
+            Quaternion.Euler(_checkpoints[NextCheckpoint].eulerAngles) * Vector3.forward
+        );
     }
+
+    public int CheckpointsReached() => NextCheckpoint;
 
 
     protected void ResetRotation(float z = 0) => transform.eulerAngles = new(CameraAngle - 90, 0, z);
