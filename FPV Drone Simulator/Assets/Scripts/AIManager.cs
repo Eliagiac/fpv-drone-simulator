@@ -6,14 +6,22 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
+
     public int Population = 20;
 
     [SerializeField] private GameObject _dronePrefab;
+
+    private readonly int[] _networkSize = { 19, 16, 4 };
 
     private float _genTimer = 0;
     private int _genCount = 0;
     private AIController[] _genDrones;
     private AIController[] _previousGenDrones;
+
+    private static int s_currentWeightSaveFileIndex;
+
+    public static string WeightsFilePath => Application.persistentDataPath + "/weights" + s_currentWeightSaveFileIndex + ".txt";
+
 
     private void Start()
     {
@@ -47,6 +55,7 @@ public class AIManager : MonoBehaviour
             // Sort the drones by fitness score in descending order (higher is better).
             _previousGenDrones = _previousGenDrones.OrderBy(drone => drone.Fitness()).Reverse().ToArray();
             Debug.Log($"Best fitness in generation {_genCount}: {_previousGenDrones[0].Fitness()}");
+            SaveWeights(_previousGenDrones[0].NeuralNetwork);
         }
 
         System.Random rng = new System.Random();
@@ -56,21 +65,32 @@ public class AIManager : MonoBehaviour
         {
             AIController drone = Instantiate(_dronePrefab, transform).GetComponent<AIController>();
 
-            drone.NeuralNetwork = new(new[] { 18, 13, 4 });
-
-            if (random) drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
+            if (random)
+            {
+                drone.NeuralNetwork = new(_networkSize);
+                drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
+            }
 
             else
             {
+                // BUG: Since the best network is always maintained, it should not be possible for the top fitness score
+                // to get worse from a generation to another. However, this does happen sometimes, which is not expected.
                 if (i < 2) drone.NeuralNetwork = new(_previousGenDrones[i].NeuralNetwork);
 
-                else if (i < Mathf.Round(Population * 0.2f)) 
+                else if (i < Mathf.Round(Population * 0.2f))
                     CreateChildNetwork(Mathf.Min(5, _previousGenDrones.Length));
 
-                else if (i < Mathf.Round(Population * 0.5f)) 
+                else if (i < Mathf.Round(Population * 0.5f))
                     CreateChildNetwork(Mathf.Min(10, _previousGenDrones.Length));
 
-                else CreateChildNetwork(Mathf.Min(30, _previousGenDrones.Length));
+                else if (i < Population - 2)
+                    CreateChildNetwork(Mathf.Min(30, _previousGenDrones.Length));
+
+                else
+                {
+                    drone.NeuralNetwork = new(_networkSize);
+                    drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
+                }
 
                 void CreateChildNetwork(int topLength)
                 {
@@ -89,5 +109,11 @@ public class AIManager : MonoBehaviour
         }
 
         _previousGenDrones = _genDrones;
+    }
+
+    private void SaveWeights(NeuralNetwork neuralNetwork)
+    {
+        s_currentWeightSaveFileIndex++;
+        neuralNetwork.SaveWeights(WeightsFilePath);
     }
 }

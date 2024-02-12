@@ -2,12 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
+[Serializable]
 public class NeuralNetwork
 {
-    public double[][] Nodes;
-    public double[][] Biases;
+    [NonSerialized] public double[][] Nodes;
+
     public double[][][] Weights;
+    public double[][] Biases;
+
+    // Used for JSON deserialization.
+    public NeuralNetwork() { }
 
     public NeuralNetwork(int[] size) 
     {
@@ -148,6 +154,36 @@ public class NeuralNetwork
 
         return Nodes[^1];
     }
+
+    
+    public void SaveWeights(string path)
+    {
+        string text = "";
+
+        for (int i = 1; i < Nodes.Length; i++)
+        {
+            for (int j = 0; j < Nodes[i].Length; j++)
+            {
+                text += $"{i} {j}: {Biases[i][j]}\n";
+            }
+        }
+
+        text += "\n";
+
+        for (int i = 1; i < Nodes.Length; i++)
+        {
+            for (int j = 0; j < Nodes[i].Length; j++)
+            {
+                for (int k = 0; k < Nodes[i - 1].Length; k++)
+                {
+                    text += $"{i} {j} {k}: {Weights[i][j][k]}\n";
+                }
+            }
+        }
+
+        File.WriteAllText(path, text);
+    }
+    
 
     private double ComputeNode(double input, ActivationFunction activationFunction)
     {

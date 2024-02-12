@@ -34,8 +34,12 @@ public class DroneController : MonoBehaviour
     public float Throttle { get; protected set; }
 
 
-    protected float HorizontalVelocity => _rb.velocity.x;
-    protected float VerticalVelocity => _rb.velocity.y;
+    protected float DroneAngleX => transform.eulerAngles.x;
+    protected float DroneAngleY => transform.eulerAngles.y;
+    protected float DroneAngleZ => transform.eulerAngles.z;
+    protected float DroneVelocityX => _rb.velocity.x;
+    protected float DroneVelocityY => _rb.velocity.y;
+    protected float DroneVelocityZ => _rb.velocity.z;
     protected float HeightFromGround
     {
         get
@@ -69,11 +73,11 @@ public class DroneController : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag != "Checkpoint") return;
-        if (_checkpointsReached.Contains(other.transform)) return;
-
-        NextCheckpoint++;
-        _checkpointsReached.Add(other.transform);
+        if (other.transform == _checkpoints[NextCheckpoint])
+        {
+            NextCheckpoint++;
+            _checkpointsReached.Add(other.transform);
+        }
     }
 
     public double Fitness()

@@ -16,8 +16,12 @@ public class AIController : DroneController
 
         double[] outputs = NeuralNetwork.FeedForward(new double[]
         {
-            HorizontalVelocity,
-            VerticalVelocity,
+            //DroneAngleX,
+            //DroneAngleY,
+            //DroneAngleZ,
+            DroneVelocityX,
+            DroneVelocityY,
+            DroneVelocityZ,
             HeightFromGround,
             distanceToNextCheckpoints[0].x,
             distanceToNextCheckpoints[0].y,
