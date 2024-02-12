@@ -70,7 +70,7 @@ public class AIManager : MonoBehaviour
             $"Current generation: {_genCount}\n" +
             $"Duration: {GenDuration}\n" +
             $"Alive: {_previousGenDrones.Count}\n" +
-            $"Best fitness: {_previousGenDrones.OrderBy(drone => drone.Fitness()).Reverse().First().Fitness()}";
+            $"Best fitness: {_previousGenDrones.Max(drone => drone.Fitness())}";
         }
     }
 
