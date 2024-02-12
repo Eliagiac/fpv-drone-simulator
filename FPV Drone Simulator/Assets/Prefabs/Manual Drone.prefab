@@ -1385,7 +1385,8 @@ MonoBehaviour:
   MaxRoll: 500
   MaxYaw: 300
   _checkpointsReachedMultiplier: 2
-  _distanceToNextCheckpointWeight: 0.2
+  _checkpointReachedWeight: 1
+  _elevationWeight: 0.1
   NextCheckpoint: 0
   _camera: {fileID: 330585546}
   _gui: {fileID: 0}

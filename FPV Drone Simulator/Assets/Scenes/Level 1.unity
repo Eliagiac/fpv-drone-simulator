@@ -1123,7 +1123,7 @@ GameObject:
   - component: {fileID: 1655068863}
   - component: {fileID: 1655068862}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: GUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1511,11 +1511,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Manual Drone
       objectReference: {fileID: 0}
-    - target: {fileID: 6781842023141840192, guid: d914ffd1b739b1a4181db24b7df73533,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d914ffd1b739b1a4181db24b7df73533, type: 3}
 --- !u!1001 &6052328274251902292
@@ -1578,7 +1573,7 @@ PrefabInstance:
     - target: {fileID: 6052328273624278755, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6052328273624278764, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}

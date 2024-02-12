@@ -19,7 +19,7 @@ public class DroneController : MonoBehaviour
     [Header("Fitness Function Weights")]
     [SerializeField, Range(1, 10)] private float _checkpointsReachedMultiplier = 2f;
     [SerializeField] private float _checkpointReachedWeight = 1f;
-    [SerializeField] private float _distanceToNextCheckpointWeight = 0.2f;
+    [SerializeField] private float _elevationWeight = 0.1f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
@@ -91,6 +91,8 @@ public class DroneController : MonoBehaviour
         // The bonus is calculated with a sigmoid function and can reach up to just
         // below _checkpointReachedWeight when the distance is close to 0.
         score += (_checkpointReachedWeight + 0.5 * _checkpointReachedWeight) * (1 / (1 + Math.Pow(Math.E, -0.1 * (-DistanceToNextCheckpoint(0).magnitude + 10))));
+
+        score += _elevationWeight - Math.Min(_elevationWeight, (HeightFromGround / 20f) * _elevationWeight);
 
         for (int i = 0; i < NextCheckpoint; i++)
         {

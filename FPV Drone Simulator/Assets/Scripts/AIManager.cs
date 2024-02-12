@@ -21,6 +21,8 @@ public class AIManager : MonoBehaviour
     private List<AIController> _genDrones;
     private List<AIController> _previousGenDrones;
 
+    private float _updateGuiTimer = 0;
+
     private static int s_currentWeightSaveFileIndex;
 
     public static string WeightsFilePath => Application.persistentDataPath + "/weights" + s_currentWeightSaveFileIndex + ".txt";
@@ -49,7 +51,8 @@ public class AIManager : MonoBehaviour
     public void Update()
     {
         _genTimer += Time.deltaTime;
-        
+        _updateGuiTimer += Time.deltaTime;
+
         if (_genTimer >= 3 + (_genCount * 0.2f)) 
         {
             _genTimer = 0;
@@ -58,9 +61,15 @@ public class AIManager : MonoBehaviour
             ResetPopulation(false);
         }
 
-        _gui.text = 
+        if (_updateGuiTimer >= 0.1)
+        {
+            _updateGuiTimer = 0;
+
+            _gui.text =
             $"Current generation: {_genCount}\n" +
-            $"Alive: {_previousGenDrones.Count}";
+            $"Alive: {_previousGenDrones.Count}\n" +
+            $"Best fitness: {_previousGenDrones.OrderBy(drone => drone.Fitness()).Reverse().First().Fitness()}";
+        }
     }
 
     private void ResetPopulation(bool random = true)
