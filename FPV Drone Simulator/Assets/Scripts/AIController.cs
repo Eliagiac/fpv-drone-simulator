@@ -15,6 +15,7 @@ public class AIController : DroneController
     {
         base.Start();
         if (_weightsFilePath != "") NeuralNetwork = new NeuralNetwork(AIManager.NetworkSize, _weightsFilePath);
+        IsReady = true;
     }
 
     private void Update()

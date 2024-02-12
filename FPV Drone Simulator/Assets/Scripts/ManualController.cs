@@ -15,6 +15,7 @@ public class ManualController : DroneController
     {
         base.Start();
         _camera.localEulerAngles = new(90 - CameraAngle, 0, 0);
+        IsReady = true;
     }
 
     private void Update()

@@ -64,7 +64,7 @@ public class AIManager : MonoBehaviour
 
         if (_updateGuiTimer >= 0.1)
         {
-            if (_previousGenDrones.Count > 0)
+            if (_previousGenDrones.Count > 0 && _previousGenDrones.All(drone => drone.IsReady))
             {
                 _updateGuiTimer = 0;
 
