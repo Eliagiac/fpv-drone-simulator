@@ -1235,7 +1235,7 @@ MonoBehaviour:
   MaxYaw: 300
   _checkpointsReachedMultiplier: 2
   _checkpointReachedWeight: 1
-  _elevationWeight: 0.02
+  _maxElevationWeight: 0.1
   NextCheckpoint: 0
   _weightsFilePath: 
 --- !u!1 &7050778871410997741

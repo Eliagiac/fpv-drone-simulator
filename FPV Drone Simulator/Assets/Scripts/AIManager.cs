@@ -31,8 +31,8 @@ public class AIManager : MonoBehaviour
 
     public void Kill(AIController drone)
     {
-        // Always maintain at least half the drones.
-        if (_previousGenDrones.Count <= Population / 2) return;
+        // Always maintain at least a small population.
+        if (_previousGenDrones.Count <= Population / 5) return;
 
         _previousGenDrones.Remove(drone);
         Destroy(drone.gameObject);

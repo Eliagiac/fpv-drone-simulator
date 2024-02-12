@@ -19,7 +19,7 @@ public class DroneController : MonoBehaviour
     [Header("Fitness Function Weights")]
     [SerializeField, Range(1, 10)] private float _checkpointsReachedMultiplier = 2f;
     [SerializeField] private float _checkpointReachedWeight = 1f;
-    [SerializeField] private float _elevationWeight = 0.02f;
+    [SerializeField] private float _maxElevationWeight = 0.02f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
@@ -28,6 +28,7 @@ public class DroneController : MonoBehaviour
     protected Rigidbody _rb;
     private List<Transform> _checkpoints = new();
     private List<Transform> _checkpointsReached = new();
+    private float _maxElevationReached;
 
 
     public Vector2 Cyclic { get; protected set; }
@@ -70,6 +71,8 @@ public class DroneController : MonoBehaviour
     {
         ApplyThrottle();
         ApplyRotation();
+
+        _maxElevationReached = Math.Max(_maxElevationReached, HeightFromGround);
     }
 
 
@@ -90,9 +93,9 @@ public class DroneController : MonoBehaviour
         // Add a bonus based on the distance to the next checkpoint (lower is better).
         // The bonus is calculated with a sigmoid function and can reach up to just
         // below _checkpointReachedWeight when the distance is close to 0.
-        score += (_checkpointReachedWeight + 0.5 * _checkpointReachedWeight) * (1 / (1 + Math.Pow(Math.E, -0.1 * (-DistanceToNextCheckpoint(0).magnitude + 10))));
+        score += DistanceBonus(DistanceToNextCheckpoint(0).magnitude, _checkpointReachedWeight);
 
-        score += _elevationWeight - Math.Min(_elevationWeight, (HeightFromGround / 20f) * _elevationWeight);
+        score += _maxElevationWeight - Math.Min(_maxElevationWeight, (_maxElevationReached / 20f) * _maxElevationWeight);
 
         for (int i = 0; i < NextCheckpoint; i++)
         {
@@ -101,6 +104,9 @@ public class DroneController : MonoBehaviour
         }
 
         return score;
+
+
+        double DistanceBonus(double distance, float maxBonus) => (maxBonus + 0.5 * maxBonus) * (1 / (1 + Math.Pow(Math.E, -0.1 * (-+10))));
     }
 
 
