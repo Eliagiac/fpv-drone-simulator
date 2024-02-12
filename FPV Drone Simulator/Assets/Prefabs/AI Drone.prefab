@@ -1233,7 +1233,8 @@ MonoBehaviour:
   MaxPitch: 500
   MaxRoll: 500
   MaxYaw: 300
-  _checkpointsReachedMultiplier: 2
+  _checkpointsReachedMultiplier: 5
+  _distanceToCheckpointPathMaxBonus: 2
   _checkpointReachedWeight: 1
   _maxElevationWeight: 0.1
   NextCheckpoint: 0

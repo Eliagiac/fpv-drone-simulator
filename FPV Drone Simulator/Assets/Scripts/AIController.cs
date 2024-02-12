@@ -19,10 +19,9 @@ public class AIController : DroneController
 
     private void Update()
     {
-        Vector3[] distanceToNextCheckpoints = DistanceToNextCheckpoints;
+        Vector3[] distanceToNextCheckpoints = NextCheckpointsPositionDifference;
         float[] angularDistanceToNextCheckpoints = AngularDistanceToNextCheckpoints;
         float[] nextCheckpointsSize = NextCheckpointsSize;
-
 
         double[] outputs = NeuralNetwork.FeedForward(new double[]
         {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,9 +18,10 @@ public class DroneController : MonoBehaviour
     public float MaxYaw = 1.0f;
 
     [Header("Fitness Function Weights")]
-    [SerializeField, Range(1, 10)] private float _checkpointsReachedMultiplier = 2f;
+    [SerializeField, Range(1, 10)] private float _checkpointsReachedMultiplier = 5f;
+    [SerializeField] private float _distanceToCheckpointPathMaxBonus = 2f;
     [SerializeField] private float _checkpointReachedWeight = 1f;
-    [SerializeField] private float _maxElevationWeight = 0.02f;
+    [SerializeField] private float _maxElevationWeight = 0.1f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
@@ -52,7 +54,7 @@ public class DroneController : MonoBehaviour
             else return 0;
         }
     }
-    protected Vector3[] DistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => DistanceToNextCheckpoint(i)).ToArray();
+    protected Vector3[] NextCheckpointsPositionDifference => Enumerable.Range(0, 3).Select(i => NextCheckpointPositionDifference(i)).ToArray();
     protected float[] AngularDistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => AngularDistanceToNextCheckpoint(i)).ToArray();
     protected float[] NextCheckpointsSize => Enumerable.Range(0, 3).Select(i => NextCheckpointSize(i)).ToArray();
 
@@ -93,7 +95,10 @@ public class DroneController : MonoBehaviour
         // Add a bonus based on the distance to the next checkpoint (lower is better).
         // The bonus is calculated with a sigmoid function and can reach up to just
         // below _checkpointReachedWeight when the distance is close to 0.
-        score += DistanceBonus(DistanceToNextCheckpoint(0).magnitude, _checkpointReachedWeight);
+        score += DistanceBonus(NextCheckpointPositionDifference(0).magnitude, _checkpointReachedWeight);
+
+        // Add a bonus based on how close the drone is to the path leading to the next checkpoint.
+        score += DistanceBonus(DistanceToCheckpointPath(), _distanceToCheckpointPathMaxBonus);
 
         score += _maxElevationWeight - Math.Min(_maxElevationWeight, (_maxElevationReached / 20f) * _maxElevationWeight);
 
@@ -106,7 +111,27 @@ public class DroneController : MonoBehaviour
         return score;
 
 
-        double DistanceBonus(double distance, float maxBonus) => (maxBonus + 0.5 * maxBonus) * (1 / (1 + Math.Pow(Math.E, -0.1 * (-+10))));
+        double DistanceBonus(double distance, float maxBonus) => (maxBonus + 0.5 * maxBonus) * (1 / (1 + Math.Pow(Math.E, -0.1 * (-distance + 10))));
+
+        double DistanceToCheckpointPath()
+        {
+            Vector3 nextCheckpointCentre = new(
+                _checkpoints[NextCheckpoint].position.x,
+                _checkpoints[NextCheckpoint].position.y + (NextCheckpointsSize[0] / 2f),
+                _checkpoints[NextCheckpoint].position.z);
+
+            Vector3 directionToNextCheckpoint = (_checkpoints[NextCheckpoint].position - transform.position).normalized;
+            Vector3 checkpointDirection = _checkpoints[NextCheckpoint].eulerAngles;
+
+            // First determine wether the drone has passed the checkpoint.
+            bool passed = Vector3.Angle(directionToNextCheckpoint, checkpointDirection) > 90;
+
+            // Then find the distance to a ray starting from the checkpoint.
+            Ray ray = new Ray(nextCheckpointCentre, passed ? -checkpointDirection : checkpointDirection);
+            float distance = Vector3.Cross(ray.direction, transform.position - ray.origin).magnitude;
+
+            return distance;
+        }
     }
 
 
@@ -115,7 +140,7 @@ public class DroneController : MonoBehaviour
     protected void ResetPosition() => transform.position = new(0, 0, 0);
 
 
-    private Vector3 DistanceToNextCheckpoint(int i) =>
+    private Vector3 NextCheckpointPositionDifference(int i) =>
         _checkpoints.Count > NextCheckpoint + i ?
         (_checkpoints[NextCheckpoint + i].position - transform.position) : Vector3.zero;
 

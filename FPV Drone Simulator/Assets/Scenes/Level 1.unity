@@ -1451,11 +1451,6 @@ PrefabInstance:
       propertyPath: _gui
       value: 
       objectReference: {fileID: 1655068862}
-    - target: {fileID: 2566474568591975490, guid: d914ffd1b739b1a4181db24b7df73533,
-        type: 3}
-      propertyPath: _elevationWeight
-      value: 0.02
-      objectReference: {fileID: 0}
     - target: {fileID: 6149139518233497594, guid: d914ffd1b739b1a4181db24b7df73533,
         type: 3}
       propertyPath: m_RootOrder
@@ -1515,11 +1510,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Manual Drone
-      objectReference: {fileID: 0}
-    - target: {fileID: 6781842023141840192, guid: d914ffd1b739b1a4181db24b7df73533,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d914ffd1b739b1a4181db24b7df73533, type: 3}
