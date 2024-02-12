@@ -7,6 +7,15 @@ public class AIController : DroneController
 {
     public NeuralNetwork NeuralNetwork;
 
+    [SerializeField] private string _weightsFilePath = "";
+
+
+    protected override void Start()
+    {
+        base.Start();
+        if (_weightsFilePath != "") NeuralNetwork = new NeuralNetwork(AIManager.NetworkSize, _weightsFilePath);
+    }
+
     private void Update()
     {
         Vector3[] distanceToNextCheckpoints = DistanceToNextCheckpoints;

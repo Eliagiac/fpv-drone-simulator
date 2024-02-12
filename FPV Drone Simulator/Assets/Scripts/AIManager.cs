@@ -6,12 +6,11 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
+    public static readonly int[] NetworkSize = { 19, 16, 4 };
 
     public int Population = 20;
 
     [SerializeField] private GameObject _dronePrefab;
-
-    private readonly int[] _networkSize = { 19, 16, 4 };
 
     private float _genTimer = 0;
     private int _genCount = 0;
@@ -52,9 +51,15 @@ public class AIManager : MonoBehaviour
 
         if (!random)
         {
+            AIController previousBest = _previousGenDrones[0];
+
             // Sort the drones by fitness score in descending order (higher is better).
             _previousGenDrones = _previousGenDrones.OrderBy(drone => drone.Fitness()).Reverse().ToArray();
-            Debug.Log($"Best fitness in generation {_genCount}: {_previousGenDrones[0].Fitness()}");
+
+            Debug.Log(
+                $"Best fitness in generation {_genCount}: {_previousGenDrones[0].Fitness()} \n" +
+                $"Previous best is in spot {Array.IndexOf(_previousGenDrones, previousBest)}.");
+
             SaveWeights(_previousGenDrones[0].NeuralNetwork);
         }
 
@@ -67,7 +72,7 @@ public class AIManager : MonoBehaviour
 
             if (random)
             {
-                drone.NeuralNetwork = new(_networkSize);
+                drone.NeuralNetwork = new(NetworkSize);
                 drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
             }
 
@@ -88,7 +93,7 @@ public class AIManager : MonoBehaviour
 
                 else
                 {
-                    drone.NeuralNetwork = new(_networkSize);
+                    drone.NeuralNetwork = new(NetworkSize);
                     drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
                 }
 

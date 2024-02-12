@@ -12,10 +12,29 @@ public class NeuralNetwork
     public double[][][] Weights;
     public double[][] Biases;
 
-    // Used for JSON deserialization.
-    public NeuralNetwork() { }
+    /// <summary>
+    /// Clone a neural network.
+    /// </summary>
+    public NeuralNetwork(NeuralNetwork other) : this(other.GetSize())
+    {
+        for (int i = 1; i < Nodes.Length; i++)
+        {
+            for (int j = 0; j < Nodes[i].Length; j++)
+            {
+                Biases[i][j] = other.Biases[i][j];
 
-    public NeuralNetwork(int[] size) 
+                for (int k = 0; k < Nodes[i - 1].Length; k++)
+                {
+                    Weights[i][j][k] = other.Weights[i][j][k];
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Initialize an empty network of the given size.
+    /// </summary
+    public NeuralNetwork(int[] size)
     {
         int layers = size.Length;
 
@@ -37,19 +56,42 @@ public class NeuralNetwork
     }
 
     /// <summary>
-    /// Clone a neural network.
+    /// Apply the weights saved at the given path.
     /// </summary>
-    public NeuralNetwork(NeuralNetwork other) : this(other.GetSize())
+    public NeuralNetwork(int[] size, string filePath) : this(size)
     {
+        List<string> biases = new();
+        List<string> weights = new();
+
+        string weightsAndBiases = File.ReadAllText(filePath);
+        using (StringReader reader = new StringReader(weightsAndBiases))
+        {
+            bool weightsStarted = false;
+
+            string line = string.Empty;
+            do
+            {
+                line = reader.ReadLine();
+                if (line != "")
+                {
+                    if (!weightsStarted) biases.Add(line);
+                    else weights.Add(line);
+                }
+
+                else weightsStarted = true;
+
+            } while (line != null);
+        }
+
         for (int i = 1; i < Nodes.Length; i++)
         {
             for (int j = 0; j < Nodes[i].Length; j++)
             {
-                Biases[i][j] = other.Biases[i][j];
+                Biases[i][j] = double.Parse(biases[(i * Nodes.Length) + j].Split(' ')[^1]);
 
                 for (int k = 0; k < Nodes[i - 1].Length; k++)
                 {
-                    Weights[i][j][k] = other.Weights[i][j][k];
+                    Weights[i][j][k] = double.Parse(weights[(i * Nodes.Length * Nodes[i].Length) + (j * Nodes[i].Length) + k].Split(' ')[^1]);
                 }
             }
         }

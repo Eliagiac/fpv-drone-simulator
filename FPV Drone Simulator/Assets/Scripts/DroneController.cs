@@ -55,7 +55,7 @@ public class DroneController : MonoBehaviour
     protected float[] NextCheckpointsSize => Enumerable.Range(0, 3).Select(i => NextCheckpointSize(i)).ToArray();
 
 
-    private void Start()
+    protected virtual void Start()
     {
         _rb = GetComponent<Rigidbody>();
 
