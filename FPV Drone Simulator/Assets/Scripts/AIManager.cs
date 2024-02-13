@@ -126,14 +126,8 @@ public class AIManager : MonoBehaviour
                 else if (i < Mathf.Round(Population * 0.5f))
                     CreateChildNetwork(Mathf.Min(10, _previousGenDrones.Count));
 
-                else if (i < Population - 2)
-                    CreateChildNetwork(Mathf.Min(30, _previousGenDrones.Count));
-
                 else
-                {
-                    drone.NeuralNetwork = new(NetworkSize);
-                    drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
-                }
+                    CreateChildNetwork(Mathf.Min(30, _previousGenDrones.Count));
 
                 void CreateChildNetwork(int topLength)
                 {
