@@ -56,5 +56,11 @@ public class AIController : DroneController
     }
 
 
-    public void OnCollisionEnter(Collision collision) => AIManager.Instance.Kill(this);
+    public void OnCollisionEnter(Collision collision)
+    {
+        // Do not destroy test drones.
+        if (_weightsFilePath != "") return;
+
+        AIManager.Instance.Kill(this);
+    }
 }

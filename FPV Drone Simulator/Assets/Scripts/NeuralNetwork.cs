@@ -83,15 +83,20 @@ public class NeuralNetwork
             } while (line != null);
         }
 
+        int currentBias = 0;
+        int currentWeight = 0;
+
         for (int i = 1; i < Nodes.Length; i++)
         {
             for (int j = 0; j < Nodes[i].Length; j++)
             {
-                Biases[i][j] = double.Parse(biases[(i * Nodes.Length) + j].Split(' ')[^1]);
+                Biases[i][j] = double.Parse(biases[currentBias].Split(' ')[^1]);
+                currentBias++;
 
                 for (int k = 0; k < Nodes[i - 1].Length; k++)
                 {
-                    Weights[i][j][k] = double.Parse(weights[(i * Nodes.Length * Nodes[i].Length) + (j * Nodes[i].Length) + k].Split(' ')[^1]);
+                    Weights[i][j][k] = double.Parse(weights[currentWeight].Split(' ')[^1]);
+                    currentWeight++;
                 }
             }
         }

@@ -1036,7 +1036,7 @@ PrefabInstance:
     - target: {fileID: 3817589148738514603, guid: 8cda1c14699fc8741a18b125e8a2031d,
         type: 3}
       propertyPath: _weightsFilePath
-      value: C:\Users\eliag\AppData\LocalLow\DefaultCompany\FPV Drone Simulator\weights30.txt
+      value: C:\Users\eliag\AppData\LocalLow\DefaultCompany\FPV Drone Simulator\weights116.txt
       objectReference: {fileID: 0}
     - target: {fileID: 6149139518233497594, guid: 8cda1c14699fc8741a18b125e8a2031d,
         type: 3}
