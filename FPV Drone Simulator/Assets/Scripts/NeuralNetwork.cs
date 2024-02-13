@@ -129,8 +129,8 @@ public class NeuralNetwork
 
         double MutateBias(double bias)
         {
-            // Mutate by a factor from 2 to 5.
-            if (rng.NextDouble() < 0.05) bias = bias * (rng.Next(4) + 2);
+            // Mutate by a normally-distributed random amount.
+            if (rng.NextDouble() < 0.05) bias *= NextGaussianDouble(2);
 
             return bias;
         }
@@ -139,10 +139,26 @@ public class NeuralNetwork
         {
             int selection = rng.Next(Weights.Length);
 
-            // Mutate the selected weight by a factor from 2 to 5.
-            if (rng.NextDouble() < 0.05) weights[selection] = weights[selection] * (rng.Next(4) + 2);
+            // Mutate the selected weight by a normally-distributed random amount.
+            if (rng.NextDouble() < 0.05) weights[selection] *= NextGaussianDouble(2);
 
             return weights;
+        }
+
+        double NextGaussianDouble(double standardDeviation = 1)
+        {
+            double u, v, S;
+
+            do
+            {
+                u = 2.0 * rng.NextDouble() - 1.0;
+                v = 2.0 * rng.NextDouble() - 1.0;
+                S = u * u + v * v;
+            }
+            while (S >= 1.0);
+
+            double fac = Math.Sqrt(-2.0 * Math.Log(S) / S);
+            return u * fac * standardDeviation;
         }
     }
 
@@ -158,11 +174,11 @@ public class NeuralNetwork
         {
             for (int j = 0; j < Nodes[i].Length; j++)
             {
-                Biases[i][j] = rng.NextDouble() * biasRange;
+                Biases[i][j] = biasRange * ((rng.NextDouble() * 2) - 1);
 
                 for (int k = 0; k < Nodes[i - 1].Length; k++)
                 {
-                    Weights[i][j][k] = rng.NextDouble() * weightRange;
+                    Weights[i][j][k] = weightRange * ((rng.NextDouble() * 2) - 1);
                 }
             }
         }
