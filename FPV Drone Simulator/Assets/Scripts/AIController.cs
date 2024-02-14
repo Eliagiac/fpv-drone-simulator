@@ -65,5 +65,6 @@ public class AIController : DroneController
         if (_weightsFilePath != "") return;
 
         AIManager.Instance.Kill(this);
+        IsDead = true;
     }
 }

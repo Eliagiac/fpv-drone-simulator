@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class AIManager : MonoBehaviour
 {
-    public static readonly int[] NetworkSize = { 20, 16, 12, 4 };
+    public static readonly int[] NetworkSize = { 20, 16, 4 };
     public static AIManager Instance;
 
     public int Population = 20;
@@ -80,12 +80,12 @@ public class AIManager : MonoBehaviour
 
             if (_showBestDroneToggle.isOn)
             {
-                List<AIController> orderedDrones = _genDrones.Where(drone => drone != null).OrderBy(drone => drone.Fitness()).Reverse().ToList();
+                List<AIController> orderedDrones = _genDrones.Where(drone => drone != null && drone.IsReady && !drone.IsDead).OrderBy(drone => drone.Fitness()).Reverse().ToList();
 
-                if (orderedDrones[0] != null) foreach (MeshRenderer rendered in orderedDrones[0].gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = true;
+                foreach (MeshRenderer rendered in orderedDrones[0].gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = true;
 
                 foreach (AIController drone in orderedDrones.Skip(1))
-                    if (drone != null) foreach (MeshRenderer rendered in drone.gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = false;
+                    foreach (MeshRenderer rendered in drone.gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = false;
             }
 
             else

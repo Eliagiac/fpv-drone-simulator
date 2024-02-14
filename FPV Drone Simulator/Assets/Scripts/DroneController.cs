@@ -69,6 +69,7 @@ public class DroneController : MonoBehaviour
 
 
     public bool IsReady { get; protected set; }
+    public bool IsDead { get; protected set; }
 
 
     protected virtual void Start()
