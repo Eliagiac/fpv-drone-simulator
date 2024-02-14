@@ -18,8 +18,9 @@ public class ManualController : DroneController
         IsReady = true;
     }
 
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         _gui.text = $"Fitness: {Fitness()}";
     }
 

@@ -18,7 +18,7 @@ public class AIController : DroneController
         IsReady = true;
     }
 
-    private void Update()
+    protected override void Update()
     {
         Vector3[] distanceToNextCheckpoints = NextCheckpointsPositionDifference;
         float[] angularDistanceToNextCheckpoints = AngularDistanceToNextCheckpoints;
@@ -26,13 +26,17 @@ public class AIController : DroneController
 
         double[] outputs = NeuralNetwork.FeedForward(new double[]
         {
-            //DroneAngleX,
-            //DroneAngleY,
-            //DroneAngleZ,
+            // The drone needs to know its orientation to be able to counter gravity.
+            DroneAngleX,
+            DroneAngleY,
+            DroneAngleZ,
+
             DroneVelocityX,
             DroneVelocityY,
             DroneVelocityZ,
+
             HeightFromGround,
+
             distanceToNextCheckpoints[0].x,
             distanceToNextCheckpoints[0].y,
             distanceToNextCheckpoints[0].z,
@@ -42,9 +46,11 @@ public class AIController : DroneController
             distanceToNextCheckpoints[2].x,
             distanceToNextCheckpoints[2].y,
             distanceToNextCheckpoints[2].z,
+
             angularDistanceToNextCheckpoints[0],
             angularDistanceToNextCheckpoints[1],
             angularDistanceToNextCheckpoints[2],
+
             nextCheckpointsSize[0],
             nextCheckpointsSize[1],
             nextCheckpointsSize[2]

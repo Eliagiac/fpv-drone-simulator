@@ -21,8 +21,10 @@ public class DroneController : MonoBehaviour
     [SerializeField, Range(1, 10)] private float _checkpointsReachedMultiplier = 5f;
     [SerializeField] private float _distanceToCheckpointPathMaxBonus = 2f;
     [SerializeField] private float _checkpointReachedWeight = 1f;
+    [SerializeField] private float _checkpointReachedTimeWeight = 0.5f;
     [SerializeField] private float _angularDistanceToNextCheckpointMaxBonus = 0.5f;
     [SerializeField] private float _maxElevationWeight = 0.1f;
+    [SerializeField] private float _totalAngleTravelledWeight = 0.03f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
@@ -31,7 +33,10 @@ public class DroneController : MonoBehaviour
     protected Rigidbody _rb;
     private List<Transform> _checkpoints = new();
     private List<Transform> _checkpointsReached = new();
+    private List<float> _timeToReachCheckpoint = new() { 0 };
     private float _maxElevationReached;
+    private Vector3 _previousRotation;
+    private float _totalAngleTravelled;
 
 
     public Vector2 Cyclic { get; protected set; }
@@ -73,6 +78,25 @@ public class DroneController : MonoBehaviour
             _checkpoints.Add(checkpoint);
 
         ResetRotation();
+        _previousRotation = transform.eulerAngles;
+    }
+
+    protected virtual void Update()
+    {
+        _timeToReachCheckpoint[^1] += Time.deltaTime;
+
+
+        Vector3 angleTravelled = transform.eulerAngles - _previousRotation;
+
+        _totalAngleTravelled +=
+            NormalizeAngle(Mathf.Abs(angleTravelled.x)) +
+            NormalizeAngle(Mathf.Abs(angleTravelled.y)) +
+            NormalizeAngle(Mathf.Abs(angleTravelled.y));
+
+        _previousRotation = transform.eulerAngles;
+
+
+        float NormalizeAngle(float angle) => angle > 180 ? angle - 360 : angle;
     }
 
     private void FixedUpdate()
@@ -89,6 +113,7 @@ public class DroneController : MonoBehaviour
         if (other.transform == _checkpoints[NextCheckpoint])
         {
             NextCheckpoint++;
+            _timeToReachCheckpoint.Add(0);
             _checkpointsReached.Add(other.transform);
         }
     }
@@ -109,11 +134,15 @@ public class DroneController : MonoBehaviour
         // Add a bonus for how close the drone's orientation is to that of the next checkpoint.
         score += DistanceBonus(AngularDistanceToNextCheckpoint(), _angularDistanceToNextCheckpointMaxBonus, 0.04);
 
-        score += _maxElevationWeight - Math.Min(_maxElevationWeight, (_maxElevationReached / 20f) * _maxElevationWeight);
+        score += MaxElevationScore();
+
+        score -= TotalAngleTravelledScore();
 
         for (int i = 0; i < NextCheckpoint; i++)
         {
             score += _checkpointReachedWeight;
+            score -= Mathf.Pow(_timeToReachCheckpoint[i] / 10f, 2) * _checkpointReachedTimeWeight;
+
             score *= _checkpointsReachedMultiplier;
         }
 
@@ -148,6 +177,12 @@ public class DroneController : MonoBehaviour
             Quaternion.Euler(DroneRotation) * Vector3.forward,
             Quaternion.Euler(_checkpoints[NextCheckpoint].eulerAngles) * Vector3.forward
         );
+
+        double MaxElevationScore() =>
+            _maxElevationWeight - Math.Min(_maxElevationWeight, (_maxElevationReached / 20f) * _maxElevationWeight);
+
+        double TotalAngleTravelledScore() =>
+            _totalAngleTravelledWeight * _totalAngleTravelled / 100f;
     }
 
     public int CheckpointsReached() => NextCheckpoint;
