@@ -4,16 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AIManager : MonoBehaviour
 {
-    public static readonly int[] NetworkSize = { 22, 18, 12, 4 };
+    public static readonly int[] NetworkSize = { 20, 16, 12, 4 };
     public static AIManager Instance;
 
     public int Population = 20;
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI _gui;
+    [SerializeField] private Toggle _showBestDroneToggle;
     [SerializeField] private GameObject _dronePrefab;
 
     private float _genTimer = 0;
@@ -75,8 +77,22 @@ public class AIManager : MonoBehaviour
                 $"Best fitness: {_previousGenDrones.Max(drone => drone.Fitness())}\n" +
                 $"Highest checkpoint reached: {_previousGenDrones.Max(drone => drone.CheckpointsReached())}";
             }
+
+            if (_showBestDroneToggle.isOn)
+            {
+                foreach (AIController drone in _genDrones.Where(drone => drone != null).OrderBy(drone => drone.Fitness()).Reverse().Skip(1))
+                    if (drone != null) foreach (MeshRenderer rendered in drone.gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = false;
+            }
+
+            else
+            {
+                foreach (AIController drone in _genDrones)
+                    if (drone != null) foreach (MeshRenderer rendered in drone.gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = true;
+            }
         }
+
     }
+
 
     private void ResetPopulation(bool random = true)
     {

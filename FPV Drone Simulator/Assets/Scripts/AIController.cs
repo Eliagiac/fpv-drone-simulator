@@ -26,10 +26,7 @@ public class AIController : DroneController
 
         double[] outputs = NeuralNetwork.FeedForward(new double[]
         {
-            // The drone needs to know its orientation to be able to counter gravity.
-            DroneAngleX,
-            DroneAngleY,
-            DroneAngleZ,
+            DroneTilt,
 
             DroneVelocityX,
             DroneVelocityY,

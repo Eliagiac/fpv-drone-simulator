@@ -25,6 +25,7 @@ public class DroneController : MonoBehaviour
     [SerializeField] private float _angularDistanceToNextCheckpointMaxBonus = 0.5f;
     [SerializeField] private float _maxElevationWeight = 0.1f;
     [SerializeField] private float _totalAngleTravelledWeight = 0.03f;
+    [SerializeField] private float _checkpointPassedPenalty = 0.1f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
@@ -37,6 +38,8 @@ public class DroneController : MonoBehaviour
     private float _maxElevationReached;
     private Vector3 _previousRotation;
     private float _totalAngleTravelled;
+    private bool _checkpointCurrentlyPassed;
+    private int _checkpointPassedCount;
 
 
     public Vector2 Cyclic { get; protected set; }
@@ -46,9 +49,7 @@ public class DroneController : MonoBehaviour
 
     private Vector3 DroneRotation => new(transform.eulerAngles.x + 90, transform.eulerAngles.y, transform.eulerAngles.z);
 
-    protected float DroneAngleX => DroneRotation.x;
-    protected float DroneAngleY => DroneRotation.y;
-    protected float DroneAngleZ => DroneRotation.z;
+    protected float DroneTilt => Vector3.Angle(Vector3.down, -transform.up);
     protected float DroneVelocityX => _rb.velocity.x;
     protected float DroneVelocityY => _rb.velocity.y;
     protected float DroneVelocityZ => _rb.velocity.z;
@@ -97,6 +98,18 @@ public class DroneController : MonoBehaviour
 
 
         float NormalizeAngle(float angle) => angle > 180 ? angle - 360 : angle;
+
+
+        Vector3 directionToNextCheckpoint = (_checkpoints[NextCheckpoint].position - transform.position).normalized;
+
+        // Turn the rotation of the checkpoint to a unit vector representing its direction.
+        Vector3 checkpointDirection = Quaternion.Euler(_checkpoints[NextCheckpoint].eulerAngles) * Vector3.forward;
+
+        // Determine wether the drone has passed the checkpoint.
+        bool passed = Vector3.Angle(directionToNextCheckpoint, checkpointDirection) > 90;
+
+        if (passed && !_checkpointCurrentlyPassed) _checkpointPassedCount++;
+        _checkpointCurrentlyPassed = passed;
     }
 
     private void FixedUpdate()
@@ -137,6 +150,8 @@ public class DroneController : MonoBehaviour
         score += MaxElevationScore();
 
         score -= TotalAngleTravelledScore();
+
+        score -= CheckpointPassedPenalty();
 
         for (int i = 0; i < NextCheckpoint; i++)
         {
@@ -183,6 +198,8 @@ public class DroneController : MonoBehaviour
 
         double TotalAngleTravelledScore() =>
             _totalAngleTravelledWeight * _totalAngleTravelled / 100f;
+
+        double CheckpointPassedPenalty() => _checkpointPassedPenalty * _checkpointPassedCount;
     }
 
     public int CheckpointsReached() => NextCheckpoint;
