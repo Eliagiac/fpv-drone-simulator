@@ -2533,7 +2533,7 @@ PrefabInstance:
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 28.1
+      value: -44.2
       objectReference: {fileID: 0}
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
@@ -2543,37 +2543,37 @@ PrefabInstance:
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -13
+      value: -25.9
       objectReference: {fileID: 0}
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9193353
+      value: 0.943352
       objectReference: {fileID: 0}
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.27231947
+      value: 0.29327962
       objectReference: {fileID: 0}
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.27231959
+      value: 0.14816357
       objectReference: {fileID: 0}
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.08066472
+      value: -0.046062715
       objectReference: {fileID: 0}
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 33
+      value: 34.54
       objectReference: {fileID: 0}
     - target: {fileID: 5106652311324661380, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -33
+      value: 17.852
       objectReference: {fileID: 0}
     - target: {fileID: 6052328273624278755, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
