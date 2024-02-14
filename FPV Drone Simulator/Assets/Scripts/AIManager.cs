@@ -37,7 +37,7 @@ public class AIManager : MonoBehaviour
         if (_previousGenDrones.Count <= Population / 5) return;
 
         _previousGenDrones.Remove(drone);
-        Destroy(drone.gameObject);
+        drone.gameObject.SetActive(false);
     }
 
 
