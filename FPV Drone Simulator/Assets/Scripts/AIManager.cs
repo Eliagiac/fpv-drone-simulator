@@ -8,10 +8,10 @@ using UnityEngine.UI;
 
 public class AIManager : MonoBehaviour
 {
-    public static readonly int[] NetworkSize = { 20, 16, 4 };
+    public static readonly int[] NetworkSize = { 20, 16, 12, 8, 4 };
     public static AIManager Instance;
 
-    public int Population = 20;
+    public int Population = 100;
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI _gui;
@@ -33,8 +33,12 @@ public class AIManager : MonoBehaviour
 
     public void Kill(AIController drone)
     {
-        // Always maintain at least a small population.
-        if (_previousGenDrones.Count <= Population / 5) return;
+        // If the population gets too small, skip to the next generation.
+        if (_previousGenDrones.Count <= Population / 5)
+        {
+            _genTimer = GenDuration;
+            return;
+        }
 
         _previousGenDrones.Remove(drone);
         drone.gameObject.SetActive(false);

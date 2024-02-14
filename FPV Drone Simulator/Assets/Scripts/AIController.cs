@@ -8,13 +8,17 @@ public class AIController : DroneController
 {
     public NeuralNetwork NeuralNetwork;
 
+    [SerializeField] private float _maxDistanceToCheckpoint = 50;
+
     [SerializeField] private string _weightsFilePath = "";
+
+    private bool UsingLoadedWeights => _weightsFilePath != "";
 
 
     protected override void Start()
     {
         base.Start();
-        if (_weightsFilePath != "") NeuralNetwork = new NeuralNetwork(AIManager.NetworkSize, _weightsFilePath);
+        if (UsingLoadedWeights) NeuralNetwork = new NeuralNetwork(AIManager.NetworkSize, _weightsFilePath);
         IsReady = true;
     }
 
@@ -23,6 +27,14 @@ public class AIController : DroneController
         Vector3[] distanceToNextCheckpoints = NextCheckpointsPositionDifference;
         float[] angularDistanceToNextCheckpoints = AngularDistanceToNextCheckpoints;
         float[] nextCheckpointsSize = NextCheckpointsSize;
+
+        // Kill the drone if it gets to far from the next checkpoint.
+        if (_maxDistanceToCheckpoint != 0 && distanceToNextCheckpoints[0].magnitude > _maxDistanceToCheckpoint)
+        {
+            AIManager.Instance.Kill(this);
+            IsDead = true;
+            return;
+        }
 
         double[] outputs = NeuralNetwork.FeedForward(new double[]
         {
@@ -62,7 +74,7 @@ public class AIController : DroneController
     public void OnCollisionEnter(Collision collision)
     {
         // Do not destroy test drones.
-        if (_weightsFilePath != "") return;
+        if (UsingLoadedWeights) return;
 
         AIManager.Instance.Kill(this);
         IsDead = true;

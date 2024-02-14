@@ -1240,7 +1240,9 @@ MonoBehaviour:
   _angularDistanceToNextCheckpointMaxBonus: 0.2
   _maxElevationWeight: 0.1
   _totalAngleTravelledWeight: 0.3
+  _checkpointPassedPenalty: 0.1
   NextCheckpoint: 0
+  _maxDistanceToCheckpoint: 30
   _weightsFilePath: 
 --- !u!1 &7050778871410997741
 GameObject:
