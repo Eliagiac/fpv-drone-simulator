@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class AIManager : MonoBehaviour
 {
-    public static readonly int[] NetworkSize = { 22, 16, 10, 4 };
+    public static readonly int[] NetworkSize = { 22, 18, 12, 4 };
     public static AIManager Instance;
 
     public int Population = 20;
@@ -25,7 +25,7 @@ public class AIManager : MonoBehaviour
 
     private static int s_currentWeightSaveFileIndex;
 
-    private float GenDuration => 4 + (_genCount * 0.015f);
+    private float GenDuration => 5 + (_genCount * 0.01f);
     public static string WeightsFilePath => Application.persistentDataPath + "/weights" + s_currentWeightSaveFileIndex + ".txt";
 
 

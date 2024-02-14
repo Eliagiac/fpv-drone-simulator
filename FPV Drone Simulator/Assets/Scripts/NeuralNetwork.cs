@@ -135,7 +135,7 @@ public class NeuralNetwork
         double MutateBias(double bias)
         {
             // Mutate by a normally-distributed random amount.
-            if (rng.NextDouble() < 0.05) bias *= NextGaussianDouble(2);
+            if (rng.NextDouble() < 0.05) bias *= NextGaussianDouble();
 
             return bias;
         }
