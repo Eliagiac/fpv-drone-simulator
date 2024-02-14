@@ -80,7 +80,11 @@ public class AIManager : MonoBehaviour
 
             if (_showBestDroneToggle.isOn)
             {
-                foreach (AIController drone in _genDrones.Where(drone => drone != null).OrderBy(drone => drone.Fitness()).Reverse().Skip(1))
+                List<AIController> orderedDrones = _genDrones.Where(drone => drone != null).OrderBy(drone => drone.Fitness()).Reverse().ToList();
+
+                if (orderedDrones[0] != null) foreach (MeshRenderer rendered in orderedDrones[0].gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = true;
+
+                foreach (AIController drone in orderedDrones.Skip(1))
                     if (drone != null) foreach (MeshRenderer rendered in drone.gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = false;
             }
 
