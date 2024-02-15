@@ -1229,7 +1229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraAngle: 35
-  MotorPower: 3000
+  MotorPower: 30
   MaxPitch: 500
   MaxRoll: 500
   MaxYaw: 300

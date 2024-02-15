@@ -1380,14 +1380,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraAngle: 35
-  MotorPower: 3000
+  MotorPower: 30
   MaxPitch: 500
   MaxRoll: 500
   MaxYaw: 300
   _checkpointsReachedMultiplier: 5
   _distanceToCheckpointPathMaxBonus: 2
   _checkpointReachedWeight: 1
+  _checkpointReachedTimeWeight: 0.5
+  _angularDistanceToNextCheckpointMaxBonus: 0.5
   _maxElevationWeight: 0.1
+  _totalAngleTravelledWeight: 0.03
+  _checkpointPassedPenalty: 0.1
   NextCheckpoint: 0
   _camera: {fileID: 330585546}
   _gui: {fileID: 0}

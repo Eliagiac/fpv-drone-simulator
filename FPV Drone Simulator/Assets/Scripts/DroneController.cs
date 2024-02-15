@@ -231,7 +231,7 @@ public class DroneController : MonoBehaviour
 
     private void ApplyThrottle()
     {
-        Vector3 throttle = transform.forward * Throttle * MotorPower * Time.fixedDeltaTime;
+        Vector3 throttle = transform.forward * Throttle * MotorPower;
 
         _rb.AddForce(throttle);
     }
