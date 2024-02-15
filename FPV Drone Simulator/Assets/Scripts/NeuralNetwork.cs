@@ -142,10 +142,10 @@ public class NeuralNetwork
 
         double[] MutateWeights(double[] weights)
         {
-            int selection = rng.Next(Weights.Length);
+            int selection = rng.Next(weights.Length);
 
             // Mutate the selected weight by a normally-distributed random amount.
-            if (rng.NextDouble() < 0.05) weights[selection] *= NextGaussianDouble(2);
+            if (rng.NextDouble() < 0.05) weights[selection] *= NextGaussianDouble();
 
             return weights;
         }

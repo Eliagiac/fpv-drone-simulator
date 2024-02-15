@@ -16,6 +16,7 @@ public class AIManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private TextMeshProUGUI _gui;
     [SerializeField] private Toggle _showBestDroneToggle;
+    [SerializeField] private Toggle _useCollisionsToggle;
     [SerializeField] private GameObject _dronePrefab;
 
     private float _genTimer = 0;
@@ -33,6 +34,8 @@ public class AIManager : MonoBehaviour
 
     public void Kill(AIController drone)
     {
+        if (!_useCollisionsToggle.isOn) return;
+        
         // If the population gets too small, skip to the next generation.
         if (_previousGenDrones.Count <= Population / 5)
         {
@@ -86,10 +89,13 @@ public class AIManager : MonoBehaviour
             {
                 List<AIController> orderedDrones = _genDrones.Where(drone => drone != null && drone.IsReady && !drone.IsDead).OrderBy(drone => drone.Fitness()).Reverse().ToList();
 
-                foreach (MeshRenderer rendered in orderedDrones[0].gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = true;
+                if (orderedDrones.Count > 0)
+                {
+                    foreach (MeshRenderer rendered in orderedDrones[0].gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = true;
 
-                foreach (AIController drone in orderedDrones.Skip(1))
-                    foreach (MeshRenderer rendered in drone.gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = false;
+                    foreach (AIController drone in orderedDrones.Skip(1))
+                        foreach (MeshRenderer rendered in drone.gameObject.GetComponentsInChildren<MeshRenderer>()) rendered.enabled = false;
+                }
             }
 
             else
