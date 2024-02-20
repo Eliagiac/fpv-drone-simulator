@@ -22,10 +22,8 @@ public class AIController : DroneController
         IsReady = true;
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
-        base.Update();
-
         Vector3[] distanceToNextCheckpoints = NextCheckpointsPositionDifference;
         float[] angularDistanceToNextCheckpoints = AngularDistanceToNextCheckpoints;
         float[] nextCheckpointsSize = NextCheckpointsSize;
@@ -70,6 +68,9 @@ public class AIController : DroneController
         Throttle = ((float)outputs[0] + 1) / 2f;
         Pedals = (float)outputs[1];
         Cyclic = new((float)outputs[2], (float)outputs[3]);
+
+
+        base.FixedUpdate();
     }
 
 

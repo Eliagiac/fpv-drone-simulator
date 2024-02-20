@@ -113,7 +113,7 @@ public class DroneController : MonoBehaviour
         _checkpointCurrentlyPassed = passed;
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         ApplyThrottle();
         ApplyRotation();
