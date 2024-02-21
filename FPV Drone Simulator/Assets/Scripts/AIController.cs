@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class AIController : DroneController
 {
-    public static readonly int[] NetworkSize = { 20, 16, 12, 12, 10, 8, 4 };
+    public static readonly int[] NetworkSize = { 25, 16, 12, 12, 10, 8, 4 };
 
     public NeuralNetwork NeuralNetwork;
 
@@ -57,14 +57,19 @@ public class AIController : DroneController
             distanceToNextCheckpoints[2].x,
             distanceToNextCheckpoints[2].y,
             distanceToNextCheckpoints[2].z,
+            distanceToNextCheckpoints[3].x,
+            distanceToNextCheckpoints[3].y,
+            distanceToNextCheckpoints[3].z,
 
             angularDistanceToNextCheckpoints[0],
             angularDistanceToNextCheckpoints[1],
             angularDistanceToNextCheckpoints[2],
+            angularDistanceToNextCheckpoints[3],
 
             nextCheckpointsSize[0],
             nextCheckpointsSize[1],
-            nextCheckpointsSize[2]
+            nextCheckpointsSize[2],
+            nextCheckpointsSize[3],
         });
 
         Throttle = ((float)outputs[0] + 1) / 2f;

@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class DroneController : MonoBehaviour
 {
+    public const int CheckpointsLookahead = 4;
+
     [Header("Drone Settings")]
     public float CameraAngle = 35f;
 
@@ -65,9 +67,9 @@ public class DroneController : MonoBehaviour
             else return 0;
         }
     }
-    protected Vector3[] NextCheckpointsPositionDifference => Enumerable.Range(0, 3).Select(i => NextCheckpointPositionDifference(i)).ToArray();
-    protected float[] AngularDistanceToNextCheckpoints => Enumerable.Range(0, 3).Select(i => AngularDistanceToNextCheckpoint(i)).ToArray();
-    protected float[] NextCheckpointsSize => Enumerable.Range(0, 3).Select(i => NextCheckpointSize(i)).ToArray();
+    protected Vector3[] NextCheckpointsPositionDifference => Enumerable.Range(0, CheckpointsLookahead).Select(i => NextCheckpointPositionDifference(i)).ToArray();
+    protected float[] AngularDistanceToNextCheckpoints => Enumerable.Range(0, CheckpointsLookahead).Select(i => AngularDistanceToNextCheckpoint(i)).ToArray();
+    protected float[] NextCheckpointsSize => Enumerable.Range(0, CheckpointsLookahead).Select(i => NextCheckpointSize(i)).ToArray();
 
 
     public bool IsReady { get; protected set; }
