@@ -24,6 +24,7 @@ public class DroneController : MonoBehaviour
     [SerializeField] private float _checkpointReachedTimeWeight = 0.5f;
     [SerializeField] private float _angularDistanceToNextCheckpointMaxBonus = 0.5f;
     [SerializeField] private float _maxElevationWeight = 0.1f;
+    [SerializeField] private float _accuracyWeight = 0.05f;
     [SerializeField] private float _totalAngleTravelledWeight = 0.03f;
     [SerializeField] private float _checkpointPassedPenalty = 0.1f;
 
@@ -34,7 +35,8 @@ public class DroneController : MonoBehaviour
     protected Rigidbody _rb;
     private List<Transform> _checkpoints = new();
     private List<Transform> _checkpointsReached = new();
-    private List<float> _timeToReachCheckpoint = new() { 0 };
+    private List<float> _timeToReachCheckpoints = new() { 0 };
+    private List<float> _distanceToCheckpointsCenter = new();
     private float _maxElevationReached;
     private Vector3 _previousRotation;
     private float _totalAngleTravelled;
@@ -85,7 +87,7 @@ public class DroneController : MonoBehaviour
 
     protected virtual void Update()
     {
-        _timeToReachCheckpoint[^1] += Time.deltaTime;
+        _timeToReachCheckpoints[^1] += Time.deltaTime;
 
 
         Vector3 angleTravelled = transform.eulerAngles - _previousRotation;
@@ -127,7 +129,8 @@ public class DroneController : MonoBehaviour
         if (other.transform == _checkpoints[NextCheckpoint])
         {
             NextCheckpoint++;
-            _timeToReachCheckpoint.Add(0);
+            _timeToReachCheckpoints.Add(0);
+            _distanceToCheckpointsCenter.Add((other.transform.position - transform.position).magnitude);
             _checkpointsReached.Add(other.transform);
         }
     }
@@ -157,7 +160,8 @@ public class DroneController : MonoBehaviour
         for (int i = 0; i < NextCheckpoint; i++)
         {
             score += _checkpointReachedWeight;
-            score -= Mathf.Pow(_timeToReachCheckpoint[i] / 10f, 2) * _checkpointReachedTimeWeight;
+            score += DistanceBonus(_distanceToCheckpointsCenter[i], _accuracyWeight, 0.5);
+            score -= Mathf.Pow(_timeToReachCheckpoints[i] / 10f, 2) * _checkpointReachedTimeWeight;
 
             score *= _checkpointsReachedMultiplier;
         }
@@ -169,7 +173,7 @@ public class DroneController : MonoBehaviour
 
         double DistanceToCheckpointPath()
         {
-            Vector3 nextCheckpointCentre = new(
+            Vector3 nextCheckpointCenter = new(
                 _checkpoints[NextCheckpoint].position.x,
                 _checkpoints[NextCheckpoint].position.y + (NextCheckpointsSize[0] / 2f),
                 _checkpoints[NextCheckpoint].position.z);
@@ -183,7 +187,7 @@ public class DroneController : MonoBehaviour
             bool passed = Vector3.Angle(directionToNextCheckpoint, checkpointDirection) > 90;
 
             // Then find the distance to a ray starting from the checkpoint.
-            Ray ray = new Ray(nextCheckpointCentre, passed ? -checkpointDirection : checkpointDirection);
+            Ray ray = new Ray(nextCheckpointCenter, passed ? -checkpointDirection : checkpointDirection);
             float distance = Vector3.Cross(ray.direction, transform.position - ray.origin).magnitude;
 
             return distance;
