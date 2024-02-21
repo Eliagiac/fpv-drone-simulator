@@ -20,6 +20,7 @@ public class AIManager : MonoBehaviour
 
     private float _genTimer = 0;
     private int _genCount = 0;
+    private float _genDuration = 5;
     private List<AIController> _genDrones;
     private List<AIController> _previousGenDrones;
 
@@ -27,7 +28,7 @@ public class AIManager : MonoBehaviour
 
     private static int s_currentWeightSaveFileIndex;
 
-    private float GenDuration => 5 + (_genCount * 0.01f);
+
     public static string WeightsFilePath => Application.persistentDataPath + "/weights" + s_currentWeightSaveFileIndex + ".txt";
 
 
@@ -38,13 +39,15 @@ public class AIManager : MonoBehaviour
         // If the population gets too small, skip to the next generation.
         if (_previousGenDrones.Count <= Population / 5)
         {
-            _genTimer = GenDuration;
+            _genTimer = _genDuration;
             return;
         }
 
         _previousGenDrones.Remove(drone);
         drone.gameObject.SetActive(false);
     }
+
+    public void ChangeDuration(float difference) => _genDuration += difference;
 
 
     private void Awake()
@@ -62,10 +65,11 @@ public class AIManager : MonoBehaviour
         _genTimer += Time.deltaTime;
         _updateGuiTimer += Time.deltaTime;
 
-        if (_genTimer >= GenDuration) 
+        if (_genTimer >= _genDuration) 
         {
             _genTimer = 0;
             _genCount++;
+            _genDuration += 0.01f;
 
             ResetPopulation(false);
         }
@@ -78,7 +82,7 @@ public class AIManager : MonoBehaviour
 
                 _gui.text =
                 $"Current generation: {_genCount}\n" +
-                $"Duration: {GenDuration}\n" +
+                $"Duration: {_genDuration.ToString("0.00")}\n" +
                 $"Alive: {_previousGenDrones.Count}\n" +
                 $"Best fitness: {_previousGenDrones.Max(drone => drone.Fitness())}\n" +
                 $"Highest checkpoint reached: {_previousGenDrones.Max(drone => drone.CheckpointsReached())}";
