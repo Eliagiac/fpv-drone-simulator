@@ -139,6 +139,12 @@ public class DroneController : MonoBehaviour
             );
 
             _checkpointsReached.Add(other.transform);
+
+            // Kill the drone if this is the last checkpoint. The fitness at the time it reached it will be used.
+            if (NextCheckpoint == _checkpoints.Count && this is AIController)
+            {
+                AIManager.Instance.Kill((AIController)this);
+            }
         }
     }
 
