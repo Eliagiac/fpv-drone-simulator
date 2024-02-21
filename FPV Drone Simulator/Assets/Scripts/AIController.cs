@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class AIController : DroneController
 {
+    public static readonly int[] NetworkSize = { 15, 12, 10, 8, 4 };
+
     public NeuralNetwork NeuralNetwork;
 
     [SerializeField] private float _maxDistanceToCheckpoint = 50;
@@ -18,7 +20,7 @@ public class AIController : DroneController
     protected override void Start()
     {
         base.Start();
-        if (IsTestDrone) NeuralNetwork = new NeuralNetwork(AIManager.NetworkSize, _weightsFilePath);
+        if (IsTestDrone) NeuralNetwork = new NeuralNetwork(NetworkSize, _weightsFilePath);
         IsReady = true;
     }
 
@@ -28,7 +30,7 @@ public class AIController : DroneController
         float[] angularDistanceToNextCheckpoints = AngularDistanceToNextCheckpoints;
         float[] nextCheckpointsSize = NextCheckpointsSize;
 
-        // Kill the drone if it gets to far from the next checkpoint.
+        // Kill the drone if it gets too far from the next checkpoint.
         if (!IsTestDrone && _maxDistanceToCheckpoint != 0 && distanceToNextCheckpoints[0].magnitude > _maxDistanceToCheckpoint)
         {
             AIManager.Instance.Kill(this);
@@ -52,17 +54,17 @@ public class AIController : DroneController
             distanceToNextCheckpoints[1].x,
             distanceToNextCheckpoints[1].y,
             distanceToNextCheckpoints[1].z,
-            distanceToNextCheckpoints[2].x,
-            distanceToNextCheckpoints[2].y,
-            distanceToNextCheckpoints[2].z,
+            //distanceToNextCheckpoints[2].x,
+            //distanceToNextCheckpoints[2].y,
+            //distanceToNextCheckpoints[2].z,
 
             angularDistanceToNextCheckpoints[0],
             angularDistanceToNextCheckpoints[1],
-            angularDistanceToNextCheckpoints[2],
+            //angularDistanceToNextCheckpoints[2],
 
             nextCheckpointsSize[0],
             nextCheckpointsSize[1],
-            nextCheckpointsSize[2]
+            //nextCheckpointsSize[2]
         });
 
         Throttle = ((float)outputs[0] + 1) / 2f;

@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class DroneController : MonoBehaviour
 {
@@ -22,9 +20,10 @@ public class DroneController : MonoBehaviour
     [SerializeField] private float _distanceToCheckpointPathMaxBonus = 2f;
     [SerializeField] private float _checkpointReachedWeight = 1f;
     [SerializeField] private float _checkpointReachedTimeWeight = 0.5f;
+    [SerializeField] private float _accuracyWeight = 0.5f;
+    [SerializeField] private float _angularAccuracyWeight = 0.2f;
     [SerializeField] private float _angularDistanceToNextCheckpointMaxBonus = 0.5f;
     [SerializeField] private float _maxElevationWeight = 0.1f;
-    [SerializeField] private float _accuracyWeight = 0.05f;
     [SerializeField] private float _totalAngleTravelledWeight = 0.03f;
     [SerializeField] private float _checkpointPassedPenalty = 0.1f;
 
@@ -49,7 +48,7 @@ public class DroneController : MonoBehaviour
     public float Throttle { get; protected set; }
 
 
-    private Vector3 DroneRotation => new(transform.eulerAngles.x + 90, transform.eulerAngles.y, transform.eulerAngles.z);
+    private Vector3 DroneRotation => new(transform.eulerAngles.x + (90 - CameraAngle), transform.eulerAngles.y, transform.eulerAngles.z);
 
     protected float DroneTilt => Vector3.Angle(Vector3.down, -transform.up);
     protected float DroneVelocityX => _rb.velocity.x;

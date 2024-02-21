@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class AIManager : MonoBehaviour
 {
-    public static readonly int[] NetworkSize = { 20, 16, 12, 8, 4 };
     public static AIManager Instance;
 
     public int Population = 100;
@@ -140,7 +139,7 @@ public class AIManager : MonoBehaviour
 
             if (random)
             {
-                drone.NeuralNetwork = new(NetworkSize);
+                drone.NeuralNetwork = new(AIController.NetworkSize);
                 drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
             }
 
