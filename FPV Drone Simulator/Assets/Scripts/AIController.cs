@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class AIController : DroneController
 {
-    public static readonly int[] NetworkSize = { 20, 16, 12, 10, 8, 4 };
+    public static readonly int[] NetworkSize = { 20, 16, 12, 12, 10, 8, 4 };
 
     public NeuralNetwork NeuralNetwork;
 
