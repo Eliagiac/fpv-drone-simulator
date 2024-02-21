@@ -172,9 +172,9 @@ public class DroneController : MonoBehaviour
             score += DistanceBonus(_angularDistanceToCheckpointsCenter[i], _angularAccuracyWeight, 0.04);
 
             score -= Mathf.Pow(_timeToReachCheckpoints[i] / 10f, 2) * _checkpointReachedTimeWeight;
-
-            score *= _checkpointsReachedMultiplier;
         }
+
+        for (int i = 0; i < NextCheckpoint; i++) score *= _checkpointsReachedMultiplier;
 
         return score;
 
