@@ -85,6 +85,9 @@ public class AIManager : MonoBehaviour
             _genCount++;
             _genDuration += 0.02f;
 
+            if (MutationRate > 0.01) MutationRate -= 0.0001;
+            if (MutationScale > 0.1) MutationScale -= 0.001;
+
             ResetPopulation(false);
         }
 
@@ -101,8 +104,8 @@ public class AIManager : MonoBehaviour
                 $"Best fitness: {_previousGenDrones.Max(drone => drone.Fitness())}\n" +
                 $"Highest checkpoint reached: {_previousGenDrones.Max(drone => drone.CheckpointsReached())}";
 
-                _mutationRateText.text = $"Mutation rate: {MutationRate:0.00}";
-                _mutationScaleText.text = $"Mutation scale: {MutationScale:0.00}";
+                _mutationRateText.text = $"Mutation rate: {MutationRate:0.0000}";
+                _mutationScaleText.text = $"Mutation scale: {MutationScale:0.000}";
             }
 
             if (_showBestDroneToggle.isOn)
