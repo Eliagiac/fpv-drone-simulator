@@ -153,7 +153,7 @@ public class AIManager : MonoBehaviour
             Debug.Log(
                 $"Best fitness in generation {_genCount}: {_previousGenDrones[0].Fitness()} \n" +
                 $"Previous best is in spot {_previousGenDrones.IndexOf(previousBest)}. " +
-                $"Checkpoint passed by {_previousGenDrones.Count(drone => drone.IsPastCheckpoint)} drones.");
+                $"Last checkpoint missed by {_previousGenDrones.Count(drone => drone.IsPastCheckpoint)} drones.");
 
             SaveWeights(_previousGenDrones[0].NeuralNetwork);
         }
