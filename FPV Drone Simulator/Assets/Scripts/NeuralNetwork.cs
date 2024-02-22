@@ -135,7 +135,7 @@ public class NeuralNetwork
         double MutateBias(double bias)
         {
             // Mutate by a normally-distributed random amount.
-            if (rng.NextDouble() < 0.05) bias *= NextGaussianDouble();
+            if (rng.NextDouble() < AIManager.MutationRate) bias *= NextGaussianDouble(AIManager.MutationScale);
 
             return bias;
         }
@@ -145,7 +145,7 @@ public class NeuralNetwork
             int selection = rng.Next(weights.Length);
 
             // Mutate the selected weight by a normally-distributed random amount.
-            if (rng.NextDouble() < 0.05) weights[selection] *= NextGaussianDouble();
+            if (rng.NextDouble() < AIManager.MutationRate) weights[selection] *= NextGaussianDouble(AIManager.MutationScale);
 
             return weights;
         }
