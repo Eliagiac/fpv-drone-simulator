@@ -1233,16 +1233,18 @@ MonoBehaviour:
   MaxPitch: 500
   MaxRoll: 500
   MaxYaw: 300
-  _checkpointsReachedMultiplier: 2
+  _checkpointsReachedMultiplier: 1.5
   _distanceToCheckpointPathMaxBonus: 1
   _checkpointReachedWeight: 2
   _checkpointReachedTimeWeight: 1
   _accuracyWeight: 0.5
   _angularAccuracyWeight: 0.2
   _angularDistanceToNextCheckpointMaxBonus: 0.2
+  _verticalDistanceToNextCheckpointMaxBonus: 0.5
   _maxElevationWeight: 0.02
   _totalAngleTravelledWeight: 0.3
   _checkpointPassedPenalty: 0.1
+  _stayedAliveBonus: 1
   NextCheckpoint: 0
   _maxDistanceToCheckpoint: 30
   _weightsFilePath: 

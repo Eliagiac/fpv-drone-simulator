@@ -25,9 +25,11 @@ public class DroneController : MonoBehaviour
     [SerializeField] private float _accuracyWeight = 0.5f;
     [SerializeField] private float _angularAccuracyWeight = 0.2f;
     [SerializeField] private float _angularDistanceToNextCheckpointMaxBonus = 0.5f;
+    [SerializeField] private float _verticalDistanceToNextCheckpointMaxBonus = 0.1f;
     [SerializeField] private float _maxElevationWeight = 0.1f;
     [SerializeField] private float _totalAngleTravelledWeight = 0.03f;
     [SerializeField] private float _checkpointPassedPenalty = 0.1f;
+    [SerializeField] private float _stayedAliveBonus = 1f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
@@ -168,11 +170,15 @@ public class DroneController : MonoBehaviour
         // Add a bonus for how close the drone's orientation is to that of the next checkpoint.
         score += DistanceBonus(AngularDistanceToNextCheckpoint(), _angularDistanceToNextCheckpointMaxBonus, 0.04);
 
+        score += DistanceBonus(VerticalDistanceToNextCheckpoint(), _verticalDistanceToNextCheckpointMaxBonus, 0.5);
+
         score += MaxElevationScore();
 
         score -= TotalAngleTravelledScore();
 
         score -= CheckpointPassedPenalty();
+
+        if (gameObject.activeSelf) score += _stayedAliveBonus;
 
         for (int i = 0; i < NextCheckpoint; i++)
         {
@@ -217,6 +223,8 @@ public class DroneController : MonoBehaviour
             DroneOrientation,
             Quaternion.Euler(_checkpoints[NextCheckpoint].eulerAngles) * Vector3.forward
         );
+
+        double VerticalDistanceToNextCheckpoint() => Mathf.Abs((_checkpoints[NextCheckpoint].position.y + (NextCheckpointsSize[0] / 2f)) - transform.position.y);
 
         double MaxElevationScore() =>
             _maxElevationWeight - Math.Min(_maxElevationWeight, (_maxElevationReached / 20f) * _maxElevationWeight);
