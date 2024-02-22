@@ -86,7 +86,7 @@ public class AIManager : MonoBehaviour
         {
             _genTimer = 0;
             _genCount++;
-            _genDuration += 0.02f;
+            _genDuration += 0.01f;
 
             if (MutationRate > 0.01) MutationRate -= 0.00002;
             if (MutationScale > 0.1) MutationScale -= 0.0005;
@@ -152,7 +152,8 @@ public class AIManager : MonoBehaviour
 
             Debug.Log(
                 $"Best fitness in generation {_genCount}: {_previousGenDrones[0].Fitness()} \n" +
-                $"Previous best is in spot {_previousGenDrones.IndexOf(previousBest)}.");
+                $"Previous best is in spot {_previousGenDrones.IndexOf(previousBest)}. " +
+                $"Checkpoint passed by {_previousGenDrones.Count(drone => drone.IsPastCheckpoint)} drones.");
 
             SaveWeights(_previousGenDrones[0].NeuralNetwork);
         }
@@ -217,7 +218,7 @@ public class AIManager : MonoBehaviour
                         if (value <= 0) return i;
                     }
 
-                    throw new Exception("Could not select a random parent.");
+                    return 0;
                 }
 
                 void CreateChildNetwork(int parent1, int parent2)

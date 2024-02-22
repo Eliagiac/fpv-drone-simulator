@@ -74,6 +74,7 @@ public class DroneController : MonoBehaviour
 
     public bool IsReady { get; protected set; }
     public bool IsDead { get; protected set; }
+    public bool IsPastCheckpoint => _checkpointCurrentlyPassed;
 
 
     protected virtual void Start()
