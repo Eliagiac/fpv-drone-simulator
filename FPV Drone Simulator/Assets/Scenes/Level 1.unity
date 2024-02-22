@@ -8345,5 +8345,10 @@ PrefabInstance:
       propertyPath: _useCollisionsToggle
       value: 
       objectReference: {fileID: 142052559}
+    - target: {fileID: 6052328273624278765, guid: f6f40c832d3aa8146b9b53339ed67147,
+        type: 3}
+      propertyPath: _initialWeightsFilePath
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f6f40c832d3aa8146b9b53339ed67147, type: 3}

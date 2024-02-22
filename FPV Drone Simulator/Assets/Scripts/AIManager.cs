@@ -28,6 +28,9 @@ public class AIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _mutationRateText;
     [SerializeField] private TextMeshProUGUI _mutationScaleText;
 
+    [Header("Settings")]
+    [SerializeField] private string _initialWeightsFilePath = "";
+
     private float _genTimer = 0;
     private int _genCount = 0;
     private float _genDuration = 3;
@@ -47,7 +50,7 @@ public class AIManager : MonoBehaviour
         if (!_useCollisionsToggle.isOn) return;
         
         // If the population gets too small, skip to the next generation.
-        if (_previousGenDrones.Count <= Population / 5)
+        if (_previousGenDrones.Count <= 10)
         {
             _genTimer = _genDuration;
             return;
@@ -71,7 +74,7 @@ public class AIManager : MonoBehaviour
 
     private void Start()
     {
-        ResetPopulation();
+        ResetPopulation(copy: _initialWeightsFilePath != "");
     }
 
     public void Update()
@@ -85,8 +88,8 @@ public class AIManager : MonoBehaviour
             _genCount++;
             _genDuration += 0.02f;
 
-            if (MutationRate > 0.01) MutationRate -= 0.0001;
-            if (MutationScale > 0.1) MutationScale -= 0.001;
+            if (MutationRate > 0.01) MutationRate -= 0.00002;
+            if (MutationScale > 0.1) MutationScale -= 0.0005;
 
             ResetPopulation(false);
         }
@@ -131,7 +134,7 @@ public class AIManager : MonoBehaviour
     }
 
 
-    private void ResetPopulation(bool random = true)
+    private void ResetPopulation(bool random = true, bool copy = false)
     {
         foreach (Transform drone in transform)
         {
@@ -159,14 +162,22 @@ public class AIManager : MonoBehaviour
 
 
         _genDrones = new();
-        if (random || _previousGenDrones.Count == 0)
+        if (random || copy || _previousGenDrones.Count == 0)
         {
             for (int i = 0; i < Population; i++)
             {
                 AIController drone = Instantiate(_dronePrefab, transform).GetComponent<AIController>();
 
-                drone.NeuralNetwork = new(AIController.NetworkSize);
-                drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
+                if (random && !copy)
+                {
+                    drone.NeuralNetwork = new(AIController.NetworkSize); 
+                    drone.NeuralNetwork.RandomizeWeightsAndBiases(0.2, 0.5);
+                }
+
+                else if (copy)
+                {
+                    drone.NeuralNetwork = new(AIController.NetworkSize, _initialWeightsFilePath);
+                }
 
                 _genDrones.Add(drone);
             }

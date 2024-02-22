@@ -1240,7 +1240,7 @@ MonoBehaviour:
   _accuracyWeight: 0.5
   _angularAccuracyWeight: 0.2
   _angularDistanceToNextCheckpointMaxBonus: 0.2
-  _maxElevationWeight: 0.1
+  _maxElevationWeight: 0.02
   _totalAngleTravelledWeight: 0.3
   _checkpointPassedPenalty: 0.1
   NextCheckpoint: 0
