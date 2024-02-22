@@ -259,7 +259,8 @@ public class DroneController : MonoBehaviour
 
     private float NextCheckpointSize(int i) =>
         _checkpoints.Count > NextCheckpoint + i ?
-        (_checkpoints[NextCheckpoint + i].GetChild(0).localScale.x) : 0;
+        (_checkpoints[NextCheckpoint + i].localScale.x *
+        _checkpoints[NextCheckpoint + i].GetChild(0).localScale.x) : 0;
 
 
     private void ApplyThrottle()
