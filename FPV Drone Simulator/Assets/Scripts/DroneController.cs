@@ -52,11 +52,11 @@ public class DroneController : MonoBehaviour
 
 
     private Vector3 DroneRotation => new(transform.eulerAngles.x + (90 - CameraAngle), transform.eulerAngles.y, transform.eulerAngles.z);
+    private Vector3 DroneOrientation => Quaternion.Euler(DroneRotation) * Vector3.forward;
 
     protected float DroneTilt => Vector3.Angle(Vector3.down, -transform.up);
-    protected float DroneVelocityX => _rb.velocity.x;
-    protected float DroneVelocityY => _rb.velocity.y;
-    protected float DroneVelocityZ => _rb.velocity.z;
+    protected Vector3 DroneVelocity => _rb.velocity;
+    protected Vector3 DroneAngularVelocity => _rb.angularVelocity;
     protected float HeightFromGround
     {
         get
@@ -67,8 +67,9 @@ public class DroneController : MonoBehaviour
             else return 0;
         }
     }
-    protected Vector3[] NextCheckpointsPositionDifference => Enumerable.Range(0, CheckpointsLookahead).Select(i => NextCheckpointPositionDifference(i)).ToArray();
-    protected float[] AngularDistanceToNextCheckpoints => Enumerable.Range(0, CheckpointsLookahead).Select(i => AngularDistanceToNextCheckpoint(i)).ToArray();
+    protected float[] DistanceToNextCheckpoints => Enumerable.Range(0, CheckpointsLookahead).Select(i => DistanceToNextCheckpoint(i)).ToArray();
+    protected Vector3[] RelativeDirectionToNextCheckpoints => Enumerable.Range(0, CheckpointsLookahead).Select(i => RelativeDirectionToNextCheckpoint(i)).ToArray();
+    protected Vector3[] RelativeRotationOfNextCheckpoints => Enumerable.Range(0, CheckpointsLookahead).Select(i => RelativeRotationOfNextCheckpoint(i)).ToArray();
     protected float[] NextCheckpointsSize => Enumerable.Range(0, CheckpointsLookahead).Select(i => NextCheckpointSize(i)).ToArray();
 
 
@@ -137,7 +138,7 @@ public class DroneController : MonoBehaviour
             _distanceToCheckpointsCenter.Add((other.transform.position - transform.position).magnitude);
             _angularDistanceToCheckpointsCenter.Add(
                 Vector3.Angle(
-                    Quaternion.Euler(DroneRotation) * Vector3.forward,
+                    DroneOrientation,
                     Quaternion.Euler(other.transform.eulerAngles) * Vector3.forward)
             );
 
@@ -159,7 +160,7 @@ public class DroneController : MonoBehaviour
         // Add a bonus based on the distance to the next checkpoint (lower is better).
         // The bonus is calculated with a sigmoid function and can reach up to just
         // below _checkpointReachedWeight when the distance is close to 0.
-        score += DistanceBonus(NextCheckpointPositionDifference(0).magnitude, _checkpointReachedWeight);
+        score += DistanceBonus(DistanceToNextCheckpoint(0), _checkpointReachedWeight);
 
         // Add a bonus based on how close the drone is to the path leading to the next checkpoint.
         score += DistanceBonus(DistanceToCheckpointPath(), _distanceToCheckpointPathMaxBonus);
@@ -213,7 +214,7 @@ public class DroneController : MonoBehaviour
         }
 
         double AngularDistanceToNextCheckpoint() => Vector3.Angle(
-            Quaternion.Euler(DroneRotation) * Vector3.forward,
+            DroneOrientation,
             Quaternion.Euler(_checkpoints[NextCheckpoint].eulerAngles) * Vector3.forward
         );
 
@@ -234,18 +235,19 @@ public class DroneController : MonoBehaviour
     protected void ResetPosition() => transform.position = new(0, 0, 0);
 
 
-    private Vector3 NextCheckpointPositionDifference(int i) =>
+    private float DistanceToNextCheckpoint(int i) =>
         _checkpoints.Count > NextCheckpoint + i ?
-        (_checkpoints[NextCheckpoint + i].position - transform.position) : Vector3.zero;
+        (_checkpoints[NextCheckpoint + i].position - transform.position).magnitude : 0;
 
-    private float AngularDistanceToNextCheckpoint(int i)
-    {
-        float angle = _checkpoints.Count > NextCheckpoint + i ?
-        (_checkpoints[NextCheckpoint + i].eulerAngles.y - transform.eulerAngles.y) : 0;
+    private Vector3 RelativeDirectionToNextCheckpoint(int i) =>
+        _checkpoints.Count > NextCheckpoint + i ?
+        (Quaternion.Inverse(Quaternion.Euler(DroneRotation)) * 
+        (_checkpoints[NextCheckpoint + i].position - transform.position).normalized) : Vector3.zero;
 
-        // Normalize the distance in the range -180 to 180 degrees.
-        return angle > 180 ? angle : angle - 360;
-    }
+    private Vector3 RelativeRotationOfNextCheckpoint(int i) =>
+        _checkpoints.Count > NextCheckpoint + i ?
+        Quaternion.FromToRotation(DroneOrientation, 
+            _checkpoints[NextCheckpoint + i].forward).eulerAngles : Vector3.zero;
 
     private float NextCheckpointSize(int i) =>
         _checkpoints.Count > NextCheckpoint + i ?

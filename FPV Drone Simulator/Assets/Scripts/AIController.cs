@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class AIController : DroneController
 {
-    public static readonly int[] NetworkSize = { 25, 16, 14, 12, 12, 10, 8, 4 };
+    public static readonly int[] NetworkSize = { 40, 30, 20, 20, 16, 12, 8, 4 };
 
     public NeuralNetwork NeuralNetwork;
 
@@ -26,45 +26,66 @@ public class AIController : DroneController
 
     protected override void FixedUpdate()
     {
-        Vector3[] distanceToNextCheckpoints = NextCheckpointsPositionDifference;
-        float[] angularDistanceToNextCheckpoints = AngularDistanceToNextCheckpoints;
+        float[] distanceToNextCheckpoints = DistanceToNextCheckpoints;
+        Vector3[] relativeDirectionToNextCheckpoints = RelativeDirectionToNextCheckpoints;
+        Vector3[] relativeRotationOfNextCheckpoints = RelativeRotationOfNextCheckpoints;
         float[] nextCheckpointsSize = NextCheckpointsSize;
 
         // Kill the drone if it gets too far from the next checkpoint.
-        if (!IsTestDrone && _maxDistanceToCheckpoint != 0 && distanceToNextCheckpoints[0].magnitude > _maxDistanceToCheckpoint)
+        if (!IsTestDrone && _maxDistanceToCheckpoint != 0 && distanceToNextCheckpoints[0] > _maxDistanceToCheckpoint)
         {
             AIManager.Instance.Kill(this);
             IsDead = true;
             return;
         }
 
+        // In order for the drone to be independent of the specific layout or position of the track/checkpoints,
+        // all inputs need to be relative to both the drone's position and orientation. The only exception is the
+        // drone's tilt, used to counter the effects of gravity.
         double[] outputs = NeuralNetwork.FeedForward(new double[]
         {
             DroneTilt,
 
-            DroneVelocityX,
-            DroneVelocityY,
-            DroneVelocityZ,
-
             HeightFromGround,
 
-            distanceToNextCheckpoints[0].x,
-            distanceToNextCheckpoints[0].y,
-            distanceToNextCheckpoints[0].z,
-            distanceToNextCheckpoints[1].x,
-            distanceToNextCheckpoints[1].y,
-            distanceToNextCheckpoints[1].z,
-            distanceToNextCheckpoints[2].x,
-            distanceToNextCheckpoints[2].y,
-            distanceToNextCheckpoints[2].z,
-            distanceToNextCheckpoints[3].x,
-            distanceToNextCheckpoints[3].y,
-            distanceToNextCheckpoints[3].z,
+            DroneVelocity.x,
+            DroneVelocity.y,
+            DroneVelocity.z,
 
-            angularDistanceToNextCheckpoints[0],
-            angularDistanceToNextCheckpoints[1],
-            angularDistanceToNextCheckpoints[2],
-            angularDistanceToNextCheckpoints[3],
+            DroneAngularVelocity.x,
+            DroneAngularVelocity.y,
+            DroneAngularVelocity.z,
+
+            distanceToNextCheckpoints[0],
+            distanceToNextCheckpoints[1],
+            distanceToNextCheckpoints[2],
+            distanceToNextCheckpoints[3],
+
+            relativeDirectionToNextCheckpoints[0].x,
+            relativeDirectionToNextCheckpoints[0].y,
+            relativeDirectionToNextCheckpoints[0].z,
+            relativeDirectionToNextCheckpoints[1].x,
+            relativeDirectionToNextCheckpoints[1].y,
+            relativeDirectionToNextCheckpoints[1].z,
+            relativeDirectionToNextCheckpoints[2].x,
+            relativeDirectionToNextCheckpoints[2].y,
+            relativeDirectionToNextCheckpoints[2].z,
+            relativeDirectionToNextCheckpoints[3].x,
+            relativeDirectionToNextCheckpoints[3].y,
+            relativeDirectionToNextCheckpoints[3].z,
+
+            relativeRotationOfNextCheckpoints[0].x,
+            relativeRotationOfNextCheckpoints[0].y,
+            relativeRotationOfNextCheckpoints[0].z,
+            relativeRotationOfNextCheckpoints[1].x,
+            relativeRotationOfNextCheckpoints[1].y,
+            relativeRotationOfNextCheckpoints[1].z,
+            relativeRotationOfNextCheckpoints[2].x,
+            relativeRotationOfNextCheckpoints[2].y,
+            relativeRotationOfNextCheckpoints[2].z,
+            relativeRotationOfNextCheckpoints[3].x,
+            relativeRotationOfNextCheckpoints[3].y,
+            relativeRotationOfNextCheckpoints[3].z,
 
             nextCheckpointsSize[0],
             nextCheckpointsSize[1],
