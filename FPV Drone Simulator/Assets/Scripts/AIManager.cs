@@ -14,6 +14,7 @@ public class AIManager : MonoBehaviour
     public static double MutationScale = 1;
 
     public int Population = 100;
+    public int MinimumPopulation = 10;
 
     /// <summary>
     /// How many drones are preserved on each generation. Higher -> lower risk.
@@ -49,15 +50,12 @@ public class AIManager : MonoBehaviour
     {
         if (!_useCollisionsToggle.isOn) return;
         
-        // If the population gets too small, skip to the next generation.
-        if (_previousGenDrones.Count <= 10)
-        {
-            _genTimer = _genDuration;
-            return;
-        }
-
         _previousGenDrones.Remove(drone);
         drone.gameObject.SetActive(false);
+
+        // If the population gets too small, skip to the next generation.
+        if (_previousGenDrones.Count <= MinimumPopulation)
+            _genTimer = _genDuration;
     }
 
     public void ChangeDuration(float difference) => _genDuration += difference;
