@@ -107,6 +107,7 @@ public class AIController : DroneController
         // Do not destroy test drones.
         if (IsTestDrone) return;
 
+        SetTimeOfDeath();
         AIManager.Instance.Kill(this);
         IsDead = true;
     }

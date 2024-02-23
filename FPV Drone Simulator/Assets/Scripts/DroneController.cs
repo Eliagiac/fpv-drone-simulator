@@ -29,7 +29,7 @@ public class DroneController : MonoBehaviour
     [SerializeField] private float _maxElevationWeight = 0.1f;
     [SerializeField] private float _totalAngleTravelledWeight = 0.03f;
     [SerializeField] private float _checkpointPassedPenalty = 0.1f;
-    [SerializeField] private float _stayedAliveBonus = 1f;
+    [SerializeField] private float _timeAliveBonus = 1f;
 
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
@@ -46,6 +46,8 @@ public class DroneController : MonoBehaviour
     private float _totalAngleTravelled;
     private bool _checkpointCurrentlyPassed;
     private int _checkpointPassedCount;
+    private float _startingTime;
+    private float _timeOfDeath;
 
 
     public Vector2 Cyclic { get; protected set; }
@@ -79,6 +81,8 @@ public class DroneController : MonoBehaviour
     public bool IsDead { get; protected set; }
     public bool IsPastCheckpoint => _checkpointCurrentlyPassed;
 
+
+    protected virtual void Awake() => _startingTime = Time.time;
 
     protected virtual void Start()
     {
@@ -172,13 +176,13 @@ public class DroneController : MonoBehaviour
 
         score += DistanceBonus(VerticalDistanceToNextCheckpoint(), _verticalDistanceToNextCheckpointMaxBonus, 0.5);
 
+        score += TimeAliveBonus();
+
         score += MaxElevationScore();
 
         score -= TotalAngleTravelledScore();
 
         score -= CheckpointPassedPenalty();
-
-        if (gameObject.activeSelf) score += _stayedAliveBonus;
 
         for (int i = 0; i < NextCheckpoint; i++)
         {
@@ -232,10 +236,14 @@ public class DroneController : MonoBehaviour
         double TotalAngleTravelledScore() =>
             _totalAngleTravelledWeight * _totalAngleTravelled / 100f;
 
+        double TimeAliveBonus() => (gameObject.activeSelf ? Time.time - _startingTime : _timeOfDeath - _startingTime) / 10f * _timeAliveBonus;
+
         double CheckpointPassedPenalty() => _checkpointPassedPenalty * _checkpointPassedCount;
     }
 
     public int CheckpointsReached() => NextCheckpoint;
+
+    public void SetTimeOfDeath() => _timeOfDeath = Time.time;
 
 
     protected void ResetRotation(float z = 0) => transform.eulerAngles = new(CameraAngle - 90, 0, z);
