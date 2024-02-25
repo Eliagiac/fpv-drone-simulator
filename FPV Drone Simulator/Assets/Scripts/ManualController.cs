@@ -10,6 +10,8 @@ public class ManualController : DroneController
     [SerializeField] private Transform _camera;
     [SerializeField] private TextMeshProUGUI _gui;
 
+    private float _updateDebugTimer;
+
 
     protected override void Start()
     {
@@ -20,8 +22,24 @@ public class ManualController : DroneController
 
     protected override void Update()
     {
+        _updateDebugTimer += Time.deltaTime;
+
         base.Update();
         _gui.text = $"Fitness: {Fitness()}";
+
+
+        if (_updateDebugTimer > 1f)
+        {
+            _updateDebugTimer = 0;
+
+            Debug.Log(
+                $"Tilt: {DroneTilt}; Velocity: {DroneVelocity}; Angular velocity: {DroneAngularVelocity}; " +
+                $"Distance to next 2 checkpoints: {DistanceToNextCheckpoints[0]}, {DistanceToNextCheckpoints[1]}; " +
+                $"Relative direction to next 2 checkpoints: {RelativeDirectionToNextCheckpoints[0]}, {RelativeDirectionToNextCheckpoints[1]}; " +
+                $"Relative rotation of next 2 checkpoints: {RelativeRotationOfNextCheckpoints[0]}, {RelativeRotationOfNextCheckpoints[1]}; " +
+                $"Size of next 2 checkpoints: {NextCheckpointsSize[0]}, {NextCheckpointsSize[1]}"
+            );
+        }
     }
 
 
