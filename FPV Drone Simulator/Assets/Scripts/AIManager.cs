@@ -15,6 +15,7 @@ public class AIManager : MonoBehaviour
 
     public int Population = 100;
     public int MinimumPopulation = 10;
+    public int InitialDuration = 3;
 
     /// <summary>
     /// How many drones are preserved on each generation. Higher -> lower risk.
@@ -34,7 +35,7 @@ public class AIManager : MonoBehaviour
 
     private float _genTimer = 0;
     private int _genCount = 0;
-    private float _genDuration = 3;
+    private float _genDuration = 0;
     private List<AIController> _genDrones;
     private List<AIController> _previousGenDrones;
 
@@ -49,13 +50,19 @@ public class AIManager : MonoBehaviour
     public void Kill(AIController drone)
     {
         if (!_useCollisionsToggle.isOn) return;
-        
-        _previousGenDrones.Remove(drone);
-        drone.gameObject.SetActive(false);
 
         // If the population gets too small, skip to the next generation.
         if (_previousGenDrones.Count <= MinimumPopulation)
+        {
             _genTimer = _genDuration;
+
+            // It's important to exit the function before removing the drone from the list to avoid issues
+            // with too many or all drones being removed, caused by simultaneous calls to the function.
+            return;
+        }
+
+        _previousGenDrones.Remove(drone);
+        drone.gameObject.SetActive(false);
     }
 
     public void ChangeDuration(float difference) => _genDuration += difference;
@@ -68,6 +75,7 @@ public class AIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        _genDuration = InitialDuration;
     }
 
     private void Start()

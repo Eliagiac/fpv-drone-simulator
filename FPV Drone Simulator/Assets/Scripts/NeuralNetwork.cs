@@ -191,8 +191,15 @@ public class NeuralNetwork
 
     public double[] FeedForward(double[] inputs)
     {
-        if (inputs.Length != Nodes[0].Length) throw new ArgumentException(
-            "The size of the inputs array does not match the size of the first layer of the network!");
+        try
+        {
+            if (inputs.Length != Nodes[0].Length) throw new ArgumentException(
+                "The size of the inputs array does not match the size of the first layer of the network!");
+        }
+        catch (Exception e)
+        {
+            int a = 0;
+        }
 
         Nodes[0] = inputs;
 

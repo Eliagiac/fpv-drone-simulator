@@ -12386,6 +12386,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6052328273624278765, guid: f6f40c832d3aa8146b9b53339ed67147,
         type: 3}
+      propertyPath: InitialDuration
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6052328273624278765, guid: f6f40c832d3aa8146b9b53339ed67147,
+        type: 3}
       propertyPath: _mutationRateText
       value: 
       objectReference: {fileID: 200384667}
