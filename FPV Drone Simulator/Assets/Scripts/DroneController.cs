@@ -247,39 +247,6 @@ public class DroneController : MonoBehaviour
     protected void ResetPosition() => transform.position = new(0, 0, 0);
 
 
-    private float DistanceToNextCheckpoint(int i) =>
-        _checkpoints.Count > NextCheckpoint + i ?
-        (NextCheckpointCentre(i) - transform.position).magnitude : 0;
-
-    private Vector3 RelativeDirectionToNextCheckpoint(int i)
-    {
-        if (_checkpoints.Count <= NextCheckpoint + i) return Vector3.zero;
-
-        Vector3 directionToTarget = (NextCheckpointCentre(i) - transform.position).normalized;
-        return Quaternion.FromToRotation(DroneOrientation, directionToTarget).eulerAngles;
-    }
-
-    private Vector3 RelativeRotationOfNextCheckpoint(int i)
-    {
-        if (_checkpoints.Count <= NextCheckpoint + i) return Vector3.zero;
-
-        Vector3 targetDirection = _checkpoints[NextCheckpoint + i].forward;
-        return Quaternion.FromToRotation(DroneOrientation, targetDirection).eulerAngles;
-    }
-
-    private float NextCheckpointSize(int i) =>
-        _checkpoints.Count > NextCheckpoint + i ?
-        (_checkpoints[NextCheckpoint + i].localScale.x *
-        _checkpoints[NextCheckpoint + i].GetChild(0).localScale.x) : 0;
-
-    private Vector3 NextCheckpointCentre(int i) =>
-        _checkpoints.Count > NextCheckpoint + i ?
-        new(
-            _checkpoints[NextCheckpoint + i].position.x,
-            _checkpoints[NextCheckpoint + i].position.y + (NextCheckpointsSize[i] / 2f),
-            _checkpoints[NextCheckpoint + i].position.z) : Vector3.zero;
-
-
     private void ApplyThrottle()
     {
         Vector3 throttle = transform.forward * Throttle * MotorPower;
@@ -295,4 +262,44 @@ public class DroneController : MonoBehaviour
 
         _rb.MoveRotation(transform.rotation * Quaternion.Euler(pitch, roll, yaw));
     }
+
+
+    private float DistanceToNextCheckpoint(int i) =>
+        _checkpoints.Count > NextCheckpoint + i ?
+        (NextCheckpointCentre(i) - transform.position).magnitude : 0;
+
+    private Vector3 RelativeDirectionToNextCheckpoint(int i)
+    {
+        if (_checkpoints.Count <= NextCheckpoint + i) return Vector3.zero;
+
+        Vector3 directionToTarget = (NextCheckpointCentre(i) - transform.position).normalized;
+        return NormalizeAngles(Quaternion.FromToRotation(DroneOrientation, directionToTarget).eulerAngles);
+    }
+
+    private Vector3 RelativeRotationOfNextCheckpoint(int i)
+    {
+        if (_checkpoints.Count <= NextCheckpoint + i) return Vector3.zero;
+
+        Vector3 targetDirection = _checkpoints[NextCheckpoint + i].forward;
+        return NormalizeAngles(Quaternion.FromToRotation(DroneOrientation, targetDirection).eulerAngles);
+    }
+
+    private Vector3 NormalizeAngles(Vector3 input)
+    {
+        return new(NormalizeAngle(input.x), NormalizeAngle(input.y), NormalizeAngle(input.z));
+
+        float NormalizeAngle(float angle) => angle > 180 ? angle - 360 : angle;
+    }
+
+    private float NextCheckpointSize(int i) =>
+        _checkpoints.Count > NextCheckpoint + i ?
+        (_checkpoints[NextCheckpoint + i].localScale.x *
+        _checkpoints[NextCheckpoint + i].GetChild(0).localScale.x) : 0;
+
+    private Vector3 NextCheckpointCentre(int i) =>
+        _checkpoints.Count > NextCheckpoint + i ?
+        new(
+            _checkpoints[NextCheckpoint + i].position.x,
+            _checkpoints[NextCheckpoint + i].position.y + (NextCheckpointsSize[i] / 2f),
+            _checkpoints[NextCheckpoint + i].position.z) : Vector3.zero;
 }
