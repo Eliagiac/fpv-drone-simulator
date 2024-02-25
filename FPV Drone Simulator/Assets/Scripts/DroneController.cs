@@ -138,16 +138,15 @@ public class DroneController : MonoBehaviour
     {
         if (other.transform == _checkpoints[NextCheckpoint])
         {
-            NextCheckpoint++;
-            _timeToReachCheckpoints.Add(0);
-
-            _distanceToCheckpointsCenter.Add((other.transform.position - transform.position).magnitude);
+            _distanceToCheckpointsCenter.Add((NextCheckpointCentre(0) - transform.position).magnitude);
             _angularDistanceToCheckpointsCenter.Add(
                 Vector3.Angle(
                     DroneOrientation,
-                    Quaternion.Euler(other.transform.eulerAngles) * Vector3.forward)
+                    Quaternion.Euler(_checkpoints[NextCheckpoint].eulerAngles) * Vector3.forward)
             );
 
+            NextCheckpoint++;
+            _timeToReachCheckpoints.Add(0);
             _checkpointsReached.Add(other.transform);
 
             // Kill the drone if this is the last checkpoint. The fitness at the time it reached it will be used.
@@ -203,10 +202,7 @@ public class DroneController : MonoBehaviour
 
         double DistanceToCheckpointPath()
         {
-            Vector3 nextCheckpointCenter = new(
-                _checkpoints[NextCheckpoint].position.x,
-                _checkpoints[NextCheckpoint].position.y + (NextCheckpointsSize[0] / 2f),
-                _checkpoints[NextCheckpoint].position.z);
+            Vector3 nextCheckpointCenter = NextCheckpointCentre(0);
 
             Vector3 directionToNextCheckpoint = (_checkpoints[NextCheckpoint].position - transform.position).normalized;
 
@@ -228,7 +224,7 @@ public class DroneController : MonoBehaviour
             Quaternion.Euler(_checkpoints[NextCheckpoint].eulerAngles) * Vector3.forward
         );
 
-        double VerticalDistanceToNextCheckpoint() => Mathf.Abs((_checkpoints[NextCheckpoint].position.y + (NextCheckpointsSize[0] / 2f)) - transform.position.y);
+        double VerticalDistanceToNextCheckpoint() => Mathf.Abs(NextCheckpointCentre(0).y - transform.position.y);
 
         double MaxElevationScore() =>
             _maxElevationWeight - Math.Min(_maxElevationWeight, (_maxElevationReached / 20f) * _maxElevationWeight);
@@ -253,13 +249,13 @@ public class DroneController : MonoBehaviour
 
     private float DistanceToNextCheckpoint(int i) =>
         _checkpoints.Count > NextCheckpoint + i ?
-        (_checkpoints[NextCheckpoint + i].position - transform.position).magnitude : 0;
+        (NextCheckpointCentre(i) - transform.position).magnitude : 0;
 
     private Vector3 RelativeDirectionToNextCheckpoint(int i)
     {
         if (_checkpoints.Count <= NextCheckpoint + i) return Vector3.zero;
 
-        Vector3 directionToTarget = (_checkpoints[NextCheckpoint + i].position - transform.position).normalized;
+        Vector3 directionToTarget = (NextCheckpointCentre(i) - transform.position).normalized;
         return Quaternion.FromToRotation(DroneOrientation, directionToTarget).eulerAngles;
     }
 
@@ -275,6 +271,13 @@ public class DroneController : MonoBehaviour
         _checkpoints.Count > NextCheckpoint + i ?
         (_checkpoints[NextCheckpoint + i].localScale.x *
         _checkpoints[NextCheckpoint + i].GetChild(0).localScale.x) : 0;
+
+    private Vector3 NextCheckpointCentre(int i) =>
+        _checkpoints.Count > NextCheckpoint + i ?
+        new(
+            _checkpoints[NextCheckpoint + i].position.x,
+            _checkpoints[NextCheckpoint + i].position.y + (NextCheckpointsSize[i] / 2f),
+            _checkpoints[NextCheckpoint + i].position.z) : Vector3.zero;
 
 
     private void ApplyThrottle()
