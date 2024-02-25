@@ -263,10 +263,13 @@ public class DroneController : MonoBehaviour
         return Quaternion.FromToRotation(DroneOrientation, directionToTarget).eulerAngles;
     }
 
-    private Vector3 RelativeRotationOfNextCheckpoint(int i) =>
-        _checkpoints.Count > NextCheckpoint + i ?
-        Quaternion.FromToRotation(DroneOrientation, 
-            _checkpoints[NextCheckpoint + i].forward).eulerAngles : Vector3.zero;
+    private Vector3 RelativeRotationOfNextCheckpoint(int i)
+    {
+        if (_checkpoints.Count <= NextCheckpoint + i) return Vector3.zero;
+
+        Vector3 targetDirection = _checkpoints[NextCheckpoint + i].forward;
+        return Quaternion.FromToRotation(DroneOrientation, targetDirection).eulerAngles;
+    }
 
     private float NextCheckpointSize(int i) =>
         _checkpoints.Count > NextCheckpoint + i ?
