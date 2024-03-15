@@ -34,6 +34,8 @@ public class DroneController : MonoBehaviour
     [Header("Stats")]
     [SerializeField] protected int NextCheckpoint;
 
+    protected bool CheckpointCurrentlyPassed;
+
 
     protected Rigidbody _rb;
     private List<Transform> _checkpoints = new();
@@ -44,7 +46,6 @@ public class DroneController : MonoBehaviour
     private float _maxElevationReached;
     private Vector3 _previousRotation;
     private float _totalAngleTravelled;
-    private bool _checkpointCurrentlyPassed;
     private int _checkpointPassedCount;
     private float _startingTime;
     private float _timeOfDeath;
@@ -79,7 +80,7 @@ public class DroneController : MonoBehaviour
 
     public bool IsReady { get; protected set; }
     public bool IsDead { get; protected set; }
-    public bool IsPastCheckpoint => _checkpointCurrentlyPassed;
+    public bool IsPastCheckpoint => CheckpointCurrentlyPassed;
 
 
     protected virtual void Awake() => _startingTime = Time.time;
@@ -121,8 +122,8 @@ public class DroneController : MonoBehaviour
         // Determine wether the drone has passed the checkpoint.
         bool passed = Vector3.Angle(directionToNextCheckpoint, checkpointDirection) > 90;
 
-        if (passed && !_checkpointCurrentlyPassed) _checkpointPassedCount++;
-        _checkpointCurrentlyPassed = passed;
+        if (passed && !CheckpointCurrentlyPassed) _checkpointPassedCount++;
+        CheckpointCurrentlyPassed = passed;
     }
 
     protected virtual void FixedUpdate()

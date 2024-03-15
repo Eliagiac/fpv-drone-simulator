@@ -24,6 +24,13 @@ public class AIController : DroneController
         IsReady = true;
     }
 
+    protected override void Update()
+    {
+        base.Update();
+
+        if (CheckpointCurrentlyPassed && AIManager.DestroyOnMiss) KillSelf();
+    }
+
     protected override void FixedUpdate()
     {
         float[] distanceToNextCheckpoints = DistanceToNextCheckpoints;
@@ -102,7 +109,9 @@ public class AIController : DroneController
     }
 
 
-    public void OnCollisionEnter(Collision collision)
+    public void OnCollisionEnter(Collision collision) => KillSelf();
+
+    private void KillSelf()
     {
         // Do not destroy test drones.
         if (IsTestDrone) return;

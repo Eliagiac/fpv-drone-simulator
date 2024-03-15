@@ -26,6 +26,7 @@ public class AIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _gui;
     [SerializeField] private Toggle _showBestDroneToggle;
     [SerializeField] private Toggle _useCollisionsToggle;
+    [SerializeField] private Toggle _destroyOnMissToggle;
     [SerializeField] private GameObject _dronePrefab;
     [SerializeField] private TextMeshProUGUI _mutationRateText;
     [SerializeField] private TextMeshProUGUI _mutationScaleText;
@@ -45,6 +46,8 @@ public class AIManager : MonoBehaviour
 
 
     public static string WeightsFilePath => Application.persistentDataPath + "/weights" + s_currentWeightSaveFileIndex + ".txt";
+
+    public static bool DestroyOnMiss => Instance._destroyOnMissToggle.isOn;
 
 
     public void Kill(AIController drone)
@@ -92,7 +95,7 @@ public class AIManager : MonoBehaviour
         {
             _genTimer = 0;
             _genCount++;
-            _genDuration += 0.01f;
+            _genDuration += 0.02f;
 
             if (MutationRate > 0.01) MutationRate -= 0.00002;
             if (MutationScale > 0.1) MutationScale -= 0.0005;
